@@ -6,6 +6,8 @@
     "chain": "hardhat node --network hardhat --no-deploy",
     "compile": "hardhat compile",
     "deploy": "hardhat deploy",
+    "keeper": "ts-node scripts/keeper.ts",
+    "flow-bot": "ts-node scripts/flow-bot.ts",
     "deploy-reset": "hardhat deploy --network baseSepolia --reset",
     "fork": "MAINNET_FORKING_ENABLED=true hardhat node --network hardhat --no-deploy",
     "generate": "hardhat run scripts/generateAccount.ts",
