@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
+import { headers } from 'next/headers'
 
 import { ResponsiveLayout } from '@/components/layout'
 import { Providers } from '@/components/providers'
@@ -37,15 +38,18 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const headersObj = await headers()
+  const cookieString = headersObj.get('cookie')
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
+        <Providers cookies={cookieString}>
           <ResponsiveLayout>{children}</ResponsiveLayout>
         </Providers>
       </body>

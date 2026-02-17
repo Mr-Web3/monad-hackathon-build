@@ -1,6 +1,5 @@
 /**
- * Chain config from env for injected wallet (desktop).
- * Set NEXT_PUBLIC_RPC_URL and NEXT_PUBLIC_CHAIN_ID in .env
+ * Chain config from env. Set NEXT_PUBLIC_RPC_URL and NEXT_PUBLIC_CHAIN_ID in .env
  */
 const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || 'https://testnet-rpc.monad.xyz'
 const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID || '10143')

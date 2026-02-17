@@ -13,7 +13,6 @@
 // 01000100 01000010 01010010 01001111 01010011
 
 pragma solidity ^0.8.28;
-
 /**
  * @title VWAPDemo
  * @notice Minimal “VWAP slicing” demo for Monad Blitz.
@@ -26,7 +25,6 @@ pragma solidity ^0.8.28;
  * - executeSlice(orderId, sliceIndex) marks that slice as executed exactly once
  * - Uses a bitmask to prevent double execution (cheap + clean)
 */
-
 contract VWAPDemo {
     struct Order {
         address creator;

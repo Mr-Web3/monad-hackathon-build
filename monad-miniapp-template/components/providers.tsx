@@ -1,15 +1,13 @@
 'use client'
 
-import { InjectedWalletProvider } from '@/context/WalletProvider'
-import { FrameProvider } from '@/components/farcaster-provider'
-import { WalletProvider } from '@/components/wallet-provider'
+import ContextProvider from '@/context'
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <InjectedWalletProvider>
-      <WalletProvider>
-        <FrameProvider>{children}</FrameProvider>
-      </WalletProvider>
-    </InjectedWalletProvider>
-  )
+export function Providers({
+  children,
+  cookies,
+}: {
+  children: React.ReactNode
+  cookies: string | null
+}) {
+  return <ContextProvider cookies={cookies}>{children}</ContextProvider>
 }
