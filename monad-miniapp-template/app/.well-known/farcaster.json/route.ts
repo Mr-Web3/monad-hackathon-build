@@ -19,7 +19,7 @@ export const minikitConfig = {
     signature: '',
   },
   baseBuilder: {
-    allowedAddresses: [] as string[],
+    allowedAddresses: ["0x1d0B2cfeBaBB59b3AF59ff77DeF5397Ce4Be9e77"],
   },
   miniapp: {
     version: '1',

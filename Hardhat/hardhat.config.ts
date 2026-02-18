@@ -18,6 +18,10 @@ const deployerPrivateKey = process.env.DEPLOYER_PRIVATE_KEY ?? "";
 // If not set, it uses ours Etherscan default API key.
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "";
 
+// Monad: use public RPCs per https://docs.monad.xyz (Alchemy Monad endpoints often return 500)
+const monadTestnetRpc = process.env.MONAD_TESTNET_RPC_URL?.trim() || "https://testnet-rpc.monad.xyz";
+const monadMainnetRpc = process.env.MONAD_MAINNET_RPC_URL?.trim() || "https://rpc.monad.xyz";
+
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.28",
@@ -33,7 +37,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: "baseSepolia",
+  defaultNetwork: "monadTestnet",
   namedAccounts: {
     deployer: {
       // By default, it will take the first Hardhat account as the deployer
@@ -122,14 +126,14 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.publicgoods.network",
       accounts: [deployerPrivateKey],
     },
-    // Monad (https://docs.monad.xyz)
+    // Monad (https://docs.monad.xyz) — use public RPCs; Alchemy Monad endpoints can return 500
     monadTestnet: {
-      url: `https://monad-testnet.g.alchemy.com/v2/${providerApiKey}`,
+      url: monadTestnetRpc,
       accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
       chainId: 10143,
     },
     monadMainnet: {
-      url: `https://monad-mainnet.g.alchemy.com/v2/${providerApiKey}`,
+      url: monadMainnetRpc,
       accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
       chainId: 143,
     },

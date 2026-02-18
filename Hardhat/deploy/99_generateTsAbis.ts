@@ -8,8 +8,12 @@
  */
 
 import * as fs from "fs";
+import * as path from "path";
 import prettier from "prettier";
 import { DeployFunction } from "hardhat-deploy/types";
+
+// Target: monad-miniapp-template/contracts (sibling of Hardhat/ when running from Hardhat/)
+const TARGET_DIR_ABSOLUTE = path.resolve(process.cwd(), "..", "monad-miniapp-template", "contracts");
 
 const generatedContractComment = `
 /**
@@ -126,7 +130,7 @@ function getContractDataFromDeployments() {
  * This script should be run last.
  */
 const generateTsAbis: DeployFunction = async function () {
-  const TARGET_DIR = "../contracts/";
+  const TARGET_DIR = TARGET_DIR_ABSOLUTE;
   const allContractsData = getContractDataFromDeployments();
 
   const fileContent = Object.entries(allContractsData).reduce(
@@ -143,11 +147,12 @@ const generateTsAbis: DeployFunction = async function () {
   if (!fs.existsSync(TARGET_DIR)) {
     fs.mkdirSync(TARGET_DIR, { recursive: true });
   }
+  const outputPath = path.join(TARGET_DIR, "deployedContracts.ts");
   fs.writeFileSync(
-    `${TARGET_DIR}deployedContracts.ts`,
+    outputPath,
     prettier.format(
       `${generatedContractComment}
-      import { GenericContractsDeclaration } from "../utils/scaffold-eth/contract";
+      import { GenericContractsDeclaration } from "../lib/contract";
 
       const deployedContracts: GenericContractsDeclaration = {${fileContent}};
 
@@ -158,9 +163,7 @@ const generateTsAbis: DeployFunction = async function () {
     )
   );
 
-  console.log(
-    `📝 Updated TypeScript contract definition file on ${TARGET_DIR}deployedContracts.ts`
-  );
+  console.log(`📝 Wrote ${outputPath}`);
 };
 
 export default generateTsAbis;

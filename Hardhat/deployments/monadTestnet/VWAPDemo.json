@@ -1,0 +1,484 @@
+{
+  "address": "0xBbf65AA24Ba6826A0872E3122bD74731e22b63f8",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "InvalidSlice",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidSlices",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Max20Slices",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotCreator",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OrderNotActive",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SliceAlreadyExecuted",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "OrderCompleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "slices",
+          "type": "uint8"
+        }
+      ],
+      "name": "OrderCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "sliceIndex",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "executor",
+          "type": "address"
+        }
+      ],
+      "name": "SliceExecuted",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "numSlices",
+          "type": "uint8"
+        }
+      ],
+      "name": "createOrder",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint8",
+          "name": "sliceIndex",
+          "type": "uint8"
+        }
+      ],
+      "name": "executeSlice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getExecutedMask",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getOrder",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "creator",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "numSlices",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "executedSlices",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct VWAPDemo.Order",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "orderId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint8",
+          "name": "sliceIndex",
+          "type": "uint8"
+        }
+      ],
+      "name": "isSliceExecuted",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "orders",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "numSlices",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "executedSlices",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "startTime",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "sliceSizes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x28413c62ca9be5d286f118e6a361e9754cd583ec691a63bf80ef8c0a86d54d50",
+  "receipt": {
+    "to": null,
+    "from": "0x63E59beb8D2844022362e2F744EEA62B9C84c65c",
+    "contractAddress": "0xBbf65AA24Ba6826A0872E3122bD74731e22b63f8",
+    "transactionIndex": 1,
+    "gasUsed": "585577",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x5b89601c8edda5c267dee1ca0529fc3efc50b81c1a5a806f27adce1c9ca7a12e",
+    "transactionHash": "0x28413c62ca9be5d286f118e6a361e9754cd583ec691a63bf80ef8c0a86d54d50",
+    "logs": [],
+    "blockNumber": 13500119,
+    "cumulativeGasUsed": "585577",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "124e33a68f68808b5e95c3021fe3539c",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.28+commit.7893614a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"InvalidSlice\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSlices\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Max20Slices\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotCreator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OrderNotActive\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SliceAlreadyExecuted\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"}],\"name\":\"OrderCompleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"slices\",\"type\":\"uint8\"}],\"name\":\"OrderCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"sliceIndex\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"}],\"name\":\"SliceExecuted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"totalAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"numSlices\",\"type\":\"uint8\"}],\"name\":\"createOrder\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"sliceIndex\",\"type\":\"uint8\"}],\"name\":\"executeSlice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"}],\"name\":\"getExecutedMask\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"}],\"name\":\"getOrder\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"totalAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"numSlices\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"executedSlices\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"internalType\":\"struct VWAPDemo.Order\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderId\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"sliceIndex\",\"type\":\"uint8\"}],\"name\":\"isSliceExecuted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"orders\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"totalAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"numSlices\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"executedSlices\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sliceSizes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"createOrder(uint256,uint8)\":{\"params\":{\"numSlices\":\"1..20\",\"totalAmount\":\"Arbitrary amount unit (demo). You can treat as \\u201ctoken units\\u201d.\"}}},\"title\":\"VWAPDemo\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"createOrder(uint256,uint8)\":{\"notice\":\"Create a new demo order.\"},\"executeSlice(bytes32,uint8)\":{\"notice\":\"Execute a specific slice. This is the \\u201cparallelizable\\u201d function. For a stronger Monad story, allow ANYONE to execute slices (bots/keepers), not just the creator. If you want creator-only: uncomment the NotCreator check below.\"},\"isSliceExecuted(bytes32,uint8)\":{\"notice\":\"Helper view for UI: returns if a slice has been executed.\"}},\"notice\":\"Minimal \\u201cVWAP slicing\\u201d demo for Monad Blitz. this is NOT a real swap executor. It simulates volume-weighted slice sizing and allows slices to be executed in ANY order, potentially in parallel. Key demo properties: - Creates an order with N slices (max 20) - Precomputes variable slice sizes (50/100/150% pattern) - executeSlice(orderId, sliceIndex) marks that slice as executed exactly once - Uses a bitmask to prevent double execution (cheap + clean)\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/VWAPDemo.sol\":\"VWAPDemo\"},\"evmVersion\":\"prague\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/VWAPDemo.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\n// Website: https://www.decentralbros.io\\n// Twitter / X: https://x.com/DecentralBros_\\n// Telegram: https://t.me/decentralbros\\n//   ____       ____       ____        _____       ____       \\n// /\\\\  _`\\\\    /\\\\  _`\\\\    /\\\\  _`\\\\     /\\\\  __`\\\\    /\\\\  _`\\\\     \\n// \\\\ \\\\ \\\\/\\\\ \\\\  \\\\ \\\\ \\\\L\\\\ \\\\  \\\\ \\\\ \\\\L\\\\ \\\\   \\\\ \\\\ \\\\/\\\\ \\\\   \\\\ \\\\,\\\\L\\\\_\\\\   \\n//  \\\\ \\\\ \\\\ \\\\ \\\\  \\\\ \\\\  _ <'  \\\\ \\\\ ,  /    \\\\ \\\\ \\\\ \\\\ \\\\   \\\\/_\\\\__ \\\\   \\n//   \\\\ \\\\ \\\\_\\\\ \\\\  \\\\ \\\\ \\\\L\\\\ \\\\  \\\\ \\\\ \\\\\\\\ \\\\    \\\\ \\\\ \\\\_\\\\ \\\\    /\\\\ \\\\L\\\\ \\\\ \\n//    \\\\ \\\\____/   \\\\ \\\\____/   \\\\ \\\\ \\\\_\\\\ \\\\_\\\\   \\\\ \\\\_____\\\\   \\\\ `\\\\____\\\\\\n//     \\\\/___/     \\\\/___/     \\\\/_/\\\\/ /    \\\\/_____/    \\\\/_____/\\n// 01000100 01000010 01010010 01001111 01010011\\n\\npragma solidity ^0.8.28;\\n/**\\n * @title VWAPDemo\\n * @notice Minimal \\u201cVWAP slicing\\u201d demo for Monad Blitz.\\n * this is NOT a real swap executor. It simulates volume-weighted slice sizing\\n * and allows slices to be executed in ANY order, potentially in parallel.\\n *\\n * Key demo properties:\\n * - Creates an order with N slices (max 20)\\n * - Precomputes variable slice sizes (50/100/150% pattern)\\n * - executeSlice(orderId, sliceIndex) marks that slice as executed exactly once\\n * - Uses a bitmask to prevent double execution (cheap + clean)\\n*/\\ncontract VWAPDemo {\\n    struct Order {\\n        address creator;\\n        uint256 totalAmount;\\n        uint8 numSlices; // max 20\\n        uint8 executedSlices;\\n        uint256 startTime;\\n        bool active;\\n    }\\n\\n    // orderId => Order\\n    mapping(bytes32 => Order) public orders;\\n\\n    // orderId => bitmask of executed slices (bit i = 1 means executed)\\n    mapping(bytes32 => uint256) private executedMask;\\n\\n    // orderId => sliceIndex => amount (stored as mapping(sliceId) to keep it simple)\\n    mapping(bytes32 => uint256) public sliceSizes;\\n\\n    event OrderCreated(bytes32 indexed orderId, address indexed creator, uint256 amount, uint8 slices);\\n    event SliceExecuted(bytes32 indexed orderId, uint8 sliceIndex, uint256 amount, address indexed executor);\\n    event OrderCompleted(bytes32 indexed orderId);\\n\\n    error Max20Slices();\\n    error InvalidSlices();\\n    error OrderNotActive();\\n    error InvalidSlice();\\n    error SliceAlreadyExecuted();\\n    error NotCreator();\\n\\n    /**\\n     * @notice Create a new demo order.\\n     * @param totalAmount Arbitrary amount unit (demo). You can treat as \\u201ctoken units\\u201d.\\n     * @param numSlices 1..20\\n    */\\n    function createOrder(uint256 totalAmount, uint8 numSlices) external returns (bytes32 orderId) {\\n        if (numSlices == 0) revert InvalidSlices();\\n        if (numSlices > 20) revert Max20Slices();\\n        require(totalAmount > 0, \\\"AMOUNT_ZERO\\\");\\n\\n        orderId = keccak256(abi.encodePacked(msg.sender, block.timestamp, totalAmount, numSlices));\\n\\n        Order storage o = orders[orderId];\\n        // prevent overwriting in extremely rare collision case\\n        require(o.creator == address(0), \\\"ORDER_EXISTS\\\");\\n\\n        o.creator = msg.sender;\\n        o.totalAmount = totalAmount;\\n        o.numSlices = numSlices;\\n        o.executedSlices = 0;\\n        o.startTime = block.timestamp;\\n        o.active = true;\\n\\n        // Pre-calculate slice sizes (SIMULATED VWAP weighting)\\n        // Pattern: 150%, 100%, 50%, repeating\\n        uint256 baseSlice = totalAmount / numSlices;\\n        uint256 sum;\\n        for (uint8 i = 0; i < numSlices; i++) {\\n            uint256 variation = (i % 3 == 0)\\n                ? (baseSlice * 150) / 100\\n                : (i % 3 == 1)\\n                    ? baseSlice\\n                    : (baseSlice * 50) / 100;\\n\\n            bytes32 sliceId = keccak256(abi.encodePacked(orderId, i));\\n            sliceSizes[sliceId] = variation;\\n            sum += variation;\\n        }\\n\\n        // Optional: normalize last slice so sum roughly equals totalAmount\\n        // Keeps the demo looking consistent.\\n        if (sum != totalAmount) {\\n            uint8 last = numSlices - 1;\\n            bytes32 lastSliceId = keccak256(abi.encodePacked(orderId, last));\\n            uint256 lastAmt = sliceSizes[lastSliceId];\\n\\n            if (sum > totalAmount) {\\n                uint256 diff = sum - totalAmount;\\n                sliceSizes[lastSliceId] = (diff >= lastAmt) ? 0 : (lastAmt - diff);\\n            } else {\\n                sliceSizes[lastSliceId] = lastAmt + (totalAmount - sum);\\n            }\\n        }\\n\\n        emit OrderCreated(orderId, msg.sender, totalAmount, numSlices);\\n    }\\n\\n    /**\\n     * @notice Execute a specific slice. This is the \\u201cparallelizable\\u201d function.\\n     * For a stronger Monad story, allow ANYONE to execute slices (bots/keepers),\\n     * not just the creator.\\n     *\\n     * If you want creator-only: uncomment the NotCreator check below.\\n    */\\n    function executeSlice(bytes32 orderId, uint8 sliceIndex) external {\\n        Order storage o = orders[orderId];\\n        if (!o.active) revert OrderNotActive();\\n        if (sliceIndex >= o.numSlices) revert InvalidSlice();\\n\\n        // If you want creator-only execution, enable this:\\n        // if (o.creator != msg.sender) revert NotCreator();\\n\\n        // bitmask check: prevent executing same slice twice\\n        uint256 bit = (1 << sliceIndex);\\n        if ((executedMask[orderId] & bit) != 0) revert SliceAlreadyExecuted();\\n\\n        executedMask[orderId] |= bit;\\n\\n        bytes32 sliceId = keccak256(abi.encodePacked(orderId, sliceIndex));\\n        uint256 amount = sliceSizes[sliceId];\\n\\n        o.executedSlices += 1;\\n        emit SliceExecuted(orderId, sliceIndex, amount, msg.sender);\\n\\n        if (o.executedSlices >= o.numSlices) {\\n            o.active = false;\\n            emit OrderCompleted(orderId);\\n        }\\n    }\\n\\n    /**\\n     * @notice Helper view for UI: returns if a slice has been executed.\\n    */\\n    function isSliceExecuted(bytes32 orderId, uint8 sliceIndex) external view returns (bool) {\\n        Order storage o = orders[orderId];\\n        if (sliceIndex >= o.numSlices) return false;\\n        uint256 bit = (1 << sliceIndex);\\n        return (executedMask[orderId] & bit) != 0;\\n    }\\n\\n    function getOrder(bytes32 orderId) external view returns (Order memory) {\\n        return orders[orderId];\\n    }\\n\\n    function getExecutedMask(bytes32 orderId) external view returns (uint256) {\\n        return executedMask[orderId];\\n    }\\n}\",\"keccak256\":\"0x96ca74cd8782e666327a2ac9e4173359390941c58f9b909654af67624747a123\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600e575f5ffd5b506109838061001c5f395ff3fe608060405234801561000f575f5ffd5b506004361061007a575f3560e01c80639c3f1e90116100585780639c3f1e90146101be578063aaa2695014610252578063be75dde71461027f578063d1a139861461029e575f5ffd5b806335b7ef551461007e5780634b730ec6146100935780635778472a146100bb575b5f5ffd5b61009161008c366004610826565b6102b1565b005b6100a66100a1366004610826565b610473565b60405190151581526020015b60405180910390f35b6101636100c9366004610850565b6040805160c0810182525f80825260208201819052918101829052606081018290526080810182905260a0810191909152505f9081526020818152604091829020825160c08101845281546001600160a01b03168152600182015492810192909252600281015460ff808216948401949094526101009004831660608301526003810154608083015260040154909116151560a082015290565b6040516100b291905f60c08201905060018060a01b0383511682526020830151602083015260ff604084015116604083015260ff60608401511660608301526080830151608083015260a0830151151560a083015292915050565b6102126101cc366004610850565b5f60208190529081526040902080546001820154600283015460038401546004909401546001600160a01b0390931693919260ff80831693610100909304811692911686565b604080516001600160a01b039097168752602087019590955260ff93841694860194909452911660608401526080830152151560a082015260c0016100b2565b610271610260366004610850565b5f9081526001602052604090205490565b6040519081526020016100b2565b61027161028d366004610850565b60026020525f908152604090205481565b6102716102ac366004610826565b6104c0565b5f828152602081905260409020600481015460ff166102e357604051631d4ecc5b60e01b815260040160405180910390fd5b600281015460ff9081169083161061030e576040516327d7767760e01b815260040160405180910390fd5b5f8381526001602081905260409091205460ff84169190911b9081161561034857604051635c87434760e01b815260040160405180910390fd5b5f8481526001602090815260408083208054851790555161036d918791879101610867565b60408051808303601f1901815291815281516020928301205f8181526002938490529190912054918501805491935060019182906103b4908290610100900460ff16610896565b92506101000a81548160ff021916908360ff160217905550336001600160a01b0316867f802682a74079e7525b4c99349a48b2234a2a01471fd521532c02e0b1c56d78b9878460405161041692919060ff929092168252602082015260400190565b60405180910390a3600284015460ff808216610100909204161061046b5760048401805460ff1916905560405186907fc1471de81880c1b225e1d454a583a6f0fde1f88fb0f03ca678be2a3656c0f7c2905f90a25b505050505050565b5f828152602081905260408120600281015460ff9081169084161061049b575f9150506104ba565b50505f8281526001602081905260409091205460ff83169190911b1615155b92915050565b5f8160ff165f036104e457604051639f31f19560e01b815260040160405180910390fd5b60148260ff1611156105095760405163ab4bfbb360e01b815260040160405180910390fd5b5f831161054b5760405162461bcd60e51b815260206004820152600b60248201526a414d4f554e545f5a45524f60a81b60448201526064015b60405180910390fd5b6040516bffffffffffffffffffffffff193360601b166020820152426034820152605481018490526001600160f81b031960f884901b16607482015260750160408051601f1981840301815291815281516020928301205f8181529283905291208054919250906001600160a01b0316156105f75760405162461bcd60e51b815260206004820152600c60248201526b4f524445525f45584953545360a01b6044820152606401610542565b80546001600160a01b03191633178155600180820185905560028201805461ffff191660ff861690811790915542600384015560048301805460ff19169092179091555f9061064690866108c3565b90505f805b8560ff168160ff16101561070f575f6106656003836108d6565b60ff16156106a4576106786003836108d6565b60ff1660011461069e57606461068f8560326108f7565b61069991906108c3565b6106bb565b836106bb565b60646106b18560966108f7565b6106bb91906108c3565b90505f86836040516020016106d1929190610867565b60408051601f1981840301815291815281516020928301205f818152600290935291208390559050610703828561090e565b9350505060010161064b565b508581146107c9575f610723600187610921565b90505f8582604051602001610739929190610867565b60408051601f1981840301815291815281516020928301205f8181526002909352912054909150888411156107a2575f6107738a8661093a565b90508181101561078c57610787818361093a565b61078e565b5f5b5f84815260026020526040902055506107c5565b6107ac848a61093a565b6107b6908261090e565b5f838152600260205260409020555b5050505b6040805187815260ff87166020820152339186917fa9a5df8d852f02dc15b225b478df353c377687241c95a7800e669c95b4472719910160405180910390a350505092915050565b803560ff81168114610821575f5ffd5b919050565b5f5f60408385031215610837575f5ffd5b8235915061084760208401610811565b90509250929050565b5f60208284031215610860575f5ffd5b5035919050565b91825260f81b6001600160f81b031916602082015260210190565b634e487b7160e01b5f52601160045260245ffd5b60ff81811683821601908111156104ba576104ba610882565b634e487b7160e01b5f52601260045260245ffd5b5f826108d1576108d16108af565b500490565b5f60ff8316806108e8576108e86108af565b8060ff84160691505092915050565b80820281158282048414176104ba576104ba610882565b808201808211156104ba576104ba610882565b60ff82811682821603908111156104ba576104ba610882565b818103818111156104ba576104ba61088256fea26469706673582212204a46fe4d88f82486b13abbae3d7b0ecc0ff87bcf6355ec4dd928e77a98d94c7764736f6c634300081c0033",
+  "deployedBytecode": "0x608060405234801561000f575f5ffd5b506004361061007a575f3560e01c80639c3f1e90116100585780639c3f1e90146101be578063aaa2695014610252578063be75dde71461027f578063d1a139861461029e575f5ffd5b806335b7ef551461007e5780634b730ec6146100935780635778472a146100bb575b5f5ffd5b61009161008c366004610826565b6102b1565b005b6100a66100a1366004610826565b610473565b60405190151581526020015b60405180910390f35b6101636100c9366004610850565b6040805160c0810182525f80825260208201819052918101829052606081018290526080810182905260a0810191909152505f9081526020818152604091829020825160c08101845281546001600160a01b03168152600182015492810192909252600281015460ff808216948401949094526101009004831660608301526003810154608083015260040154909116151560a082015290565b6040516100b291905f60c08201905060018060a01b0383511682526020830151602083015260ff604084015116604083015260ff60608401511660608301526080830151608083015260a0830151151560a083015292915050565b6102126101cc366004610850565b5f60208190529081526040902080546001820154600283015460038401546004909401546001600160a01b0390931693919260ff80831693610100909304811692911686565b604080516001600160a01b039097168752602087019590955260ff93841694860194909452911660608401526080830152151560a082015260c0016100b2565b610271610260366004610850565b5f9081526001602052604090205490565b6040519081526020016100b2565b61027161028d366004610850565b60026020525f908152604090205481565b6102716102ac366004610826565b6104c0565b5f828152602081905260409020600481015460ff166102e357604051631d4ecc5b60e01b815260040160405180910390fd5b600281015460ff9081169083161061030e576040516327d7767760e01b815260040160405180910390fd5b5f8381526001602081905260409091205460ff84169190911b9081161561034857604051635c87434760e01b815260040160405180910390fd5b5f8481526001602090815260408083208054851790555161036d918791879101610867565b60408051808303601f1901815291815281516020928301205f8181526002938490529190912054918501805491935060019182906103b4908290610100900460ff16610896565b92506101000a81548160ff021916908360ff160217905550336001600160a01b0316867f802682a74079e7525b4c99349a48b2234a2a01471fd521532c02e0b1c56d78b9878460405161041692919060ff929092168252602082015260400190565b60405180910390a3600284015460ff808216610100909204161061046b5760048401805460ff1916905560405186907fc1471de81880c1b225e1d454a583a6f0fde1f88fb0f03ca678be2a3656c0f7c2905f90a25b505050505050565b5f828152602081905260408120600281015460ff9081169084161061049b575f9150506104ba565b50505f8281526001602081905260409091205460ff83169190911b1615155b92915050565b5f8160ff165f036104e457604051639f31f19560e01b815260040160405180910390fd5b60148260ff1611156105095760405163ab4bfbb360e01b815260040160405180910390fd5b5f831161054b5760405162461bcd60e51b815260206004820152600b60248201526a414d4f554e545f5a45524f60a81b60448201526064015b60405180910390fd5b6040516bffffffffffffffffffffffff193360601b166020820152426034820152605481018490526001600160f81b031960f884901b16607482015260750160408051601f1981840301815291815281516020928301205f8181529283905291208054919250906001600160a01b0316156105f75760405162461bcd60e51b815260206004820152600c60248201526b4f524445525f45584953545360a01b6044820152606401610542565b80546001600160a01b03191633178155600180820185905560028201805461ffff191660ff861690811790915542600384015560048301805460ff19169092179091555f9061064690866108c3565b90505f805b8560ff168160ff16101561070f575f6106656003836108d6565b60ff16156106a4576106786003836108d6565b60ff1660011461069e57606461068f8560326108f7565b61069991906108c3565b6106bb565b836106bb565b60646106b18560966108f7565b6106bb91906108c3565b90505f86836040516020016106d1929190610867565b60408051601f1981840301815291815281516020928301205f818152600290935291208390559050610703828561090e565b9350505060010161064b565b508581146107c9575f610723600187610921565b90505f8582604051602001610739929190610867565b60408051601f1981840301815291815281516020928301205f8181526002909352912054909150888411156107a2575f6107738a8661093a565b90508181101561078c57610787818361093a565b61078e565b5f5b5f84815260026020526040902055506107c5565b6107ac848a61093a565b6107b6908261090e565b5f838152600260205260409020555b5050505b6040805187815260ff87166020820152339186917fa9a5df8d852f02dc15b225b478df353c377687241c95a7800e669c95b4472719910160405180910390a350505092915050565b803560ff81168114610821575f5ffd5b919050565b5f5f60408385031215610837575f5ffd5b8235915061084760208401610811565b90509250929050565b5f60208284031215610860575f5ffd5b5035919050565b91825260f81b6001600160f81b031916602082015260210190565b634e487b7160e01b5f52601160045260245ffd5b60ff81811683821601908111156104ba576104ba610882565b634e487b7160e01b5f52601260045260245ffd5b5f826108d1576108d16108af565b500490565b5f60ff8316806108e8576108e86108af565b8060ff84160691505092915050565b80820281158282048414176104ba576104ba610882565b808201808211156104ba576104ba610882565b60ff82811682821603908111156104ba576104ba610882565b818103818111156104ba576104ba61088256fea26469706673582212204a46fe4d88f82486b13abbae3d7b0ecc0ff87bcf6355ec4dd928e77a98d94c7764736f6c634300081c0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "createOrder(uint256,uint8)": {
+        "params": {
+          "numSlices": "1..20",
+          "totalAmount": "Arbitrary amount unit (demo). You can treat as “token units”."
+        }
+      }
+    },
+    "title": "VWAPDemo",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "createOrder(uint256,uint8)": {
+        "notice": "Create a new demo order."
+      },
+      "executeSlice(bytes32,uint8)": {
+        "notice": "Execute a specific slice. This is the “parallelizable” function. For a stronger Monad story, allow ANYONE to execute slices (bots/keepers), not just the creator. If you want creator-only: uncomment the NotCreator check below."
+      },
+      "isSliceExecuted(bytes32,uint8)": {
+        "notice": "Helper view for UI: returns if a slice has been executed."
+      }
+    },
+    "notice": "Minimal “VWAP slicing” demo for Monad Blitz. this is NOT a real swap executor. It simulates volume-weighted slice sizing and allows slices to be executed in ANY order, potentially in parallel. Key demo properties: - Creates an order with N slices (max 20) - Precomputes variable slice sizes (50/100/150% pattern) - executeSlice(orderId, sliceIndex) marks that slice as executed exactly once - Uses a bitmask to prevent double execution (cheap + clean)",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 20,
+        "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+        "label": "orders",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_bytes32,t_struct(Order)15_storage)"
+      },
+      {
+        "astId": 24,
+        "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+        "label": "executedMask",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_bytes32,t_uint256)"
+      },
+      {
+        "astId": 28,
+        "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+        "label": "sliceSizes",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_bytes32,t_uint256)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_bytes32,t_struct(Order)15_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct VWAPDemo.Order)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Order)15_storage"
+      },
+      "t_mapping(t_bytes32,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(Order)15_storage": {
+        "encoding": "inplace",
+        "label": "struct VWAPDemo.Order",
+        "members": [
+          {
+            "astId": 4,
+            "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+            "label": "creator",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 6,
+            "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+            "label": "totalAmount",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 8,
+            "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+            "label": "numSlices",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 10,
+            "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+            "label": "executedSlices",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 12,
+            "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+            "label": "startTime",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 14,
+            "contract": "contracts/VWAPDemo.sol:VWAPDemo",
+            "label": "active",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bool"
+          }
+        ],
+        "numberOfBytes": "160"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint8": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      }
+    }
+  }
+}

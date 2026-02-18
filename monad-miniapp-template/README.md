@@ -1,6 +1,61 @@
-# Monad Farcaster MiniApp Template
+# Monad Farcaster MiniApp Template — VWAP Demo
 
-The template demonstrates all Mini App capabilities and lets you easily modify it, so you can build Mini Apps.
+Farcaster Mini App on Monad Testnet: create VWAP-style orders, execute slices, and watch live contract events.
+
+## Quick start (install, env, run)
+
+### Install
+
+```bash
+yarn
+```
+
+### Env setup
+
+```bash
+cp .env.local.example .env.local
+```
+
+Edit `.env.local` and set at least:
+
+- **`NEXT_PUBLIC_REOWN_PROJECT_ID`** — from [Reown Dashboard](https://dashboard.reown.com) (for wallet connect).
+- **`NEXT_PUBLIC_VWAP_DEMO_ADDRESS`** — your deployed VWAPDemo contract address (or leave empty to use the default in code).
+
+Optional: `NEXT_PUBLIC_RPC_URL` (default `https://testnet-rpc.monad.xyz`), `NEXT_PUBLIC_EXPLORER_BASE_URL` (default `https://testnet.monadscan.com`).
+
+### Run dev
+
+```bash
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Connect wallet (header) and switch to Monad Testnet if prompted. Use **Get faucet MON** (home or order page) if you need testnet MON.
+
+### Deploy (contract already deployed)
+
+The frontend points at a deployed VWAPDemo contract on Monad Testnet. To deploy your own from the Hardhat project:
+
+```bash
+cd ../Hardhat
+cp .env.example .env
+# Set DEPLOYER_PRIVATE_KEY and optionally MONAD_TESTNET_RPC_URL
+yarn deploy --network monadTestnet
+```
+
+Then set `NEXT_PUBLIC_VWAP_DEMO_ADDRESS` in the miniapp `.env.local` to the deployed address. The Hardhat deploy script also writes `monad-miniapp-template/contracts/deployedContracts.ts` with the new address and ABI.
+
+---
+
+## How to use it (60 seconds)
+
+1. **Connect** — Click the header button and connect your wallet. Switch to **Monad Testnet** if asked.
+2. **Get MON** — Click **Get faucet MON** (home or order page) and request testnet MON if balance is empty.
+3. **Create order** — Enter total amount (e.g. 1000) and slices (1–20, e.g. 12). Click **Create order** and confirm in your wallet.
+4. **Open order** — After creation you’ll see the order ID; click **Open order** or paste an order ID in the “View order” card and click **Open**.
+5. **Execute slices** — On the order page, click **Execute** on any slice, or use **Execute next** / **Execute all remaining**.
+6. **Live feed** — OrderCreated and SliceExecuted events appear in the live feed (all on home, filtered by order on the order page).
+
+---
 
 ## Cloning the Template
 

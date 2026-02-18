@@ -114,8 +114,8 @@ contract VWAPDemo {
 
     /**
      * @notice Execute a specific slice. This is the “parallelizable” function.
-     *         For a stronger Monad story, allow ANYONE to execute slices (bots/keepers),
-     *         not just the creator.
+     * For a stronger Monad story, allow ANYONE to execute slices (bots/keepers),
+     * not just the creator.
      *
      * If you want creator-only: uncomment the NotCreator check below.
     */

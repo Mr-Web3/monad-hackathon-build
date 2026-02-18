@@ -7,6 +7,9 @@ import { formatUnits } from 'viem'
 import { AppKitButton } from '@reown/appkit/react'
 
 const MONAD_TESTNET_CHAIN_ID = 10143
+const MONAD_RPC_URL =
+  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_RPC_URL?.trim()) ||
+  'https://testnet-rpc.monad.xyz'
 
 function shortenAddress(address: string): string {
   if (address.length < 12) return address
@@ -110,7 +113,7 @@ export function Header() {
                             addEthereumChainParameter: {
                               chainName: 'Monad Testnet',
                               nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
-                              rpcUrls: ['https://testnet-rpc.monad.xyz'],
+                              rpcUrls: [MONAD_RPC_URL],
                               blockExplorerUrls: ['https://testnet.monadexplorer.com'],
                             },
                           })

@@ -91,14 +91,6 @@ async function waitForConfirmation(
   }
 }
 
-function checksumAddress(address: string, ethers: any): string {
-  try {
-    return ethers.getAddress(address.toLowerCase());
-  } catch (error) {
-    throw new Error(`Invalid address format: ${address}. Error: ${error}`);
-  }
-}
-
 const deployContracts: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
@@ -119,83 +111,6 @@ const deployContracts: DeployFunction = async function (
 
   log("Checking for pending transactions...");
   await waitForPendingTransactions(provider, deployer, log);
-
-  const usdcEnv = process.env.USDC;
-  const gridOracleEnv = process.env.GRID_ORACLE;
-
-  if (!usdcEnv) {
-    throw new Error(
-      "USDC is required. Set USDC in .env to your test USDC (or mainnet USDC) token address."
-    );
-  }
-
-  const usdcAddress = checksumAddress(usdcEnv, ethers);
-  log(`Using USDC at ${usdcAddress}`);
-
-  const oracleAddress = gridOracleEnv
-    ? checksumAddress(gridOracleEnv, ethers)
-    : deployer;
-  log(`GridBank oracle: ${oracleAddress}`);
-
-  // Deploy AgentTreasury (no constructor args)
-  log("Deploying AgentTreasury...");
-  const agentTreasury = await deploy("AgentTreasury", {
-    from: deployer,
-    args: [],
-    gasPrice: gasPriceWithBuffer.toString(),
-    log: true,
-    waitConfirmations: 2,
-  });
-  if (agentTreasury.receipt?.transactionHash) {
-    await waitForConfirmation(
-      agentTreasury.receipt.transactionHash,
-      provider,
-      2,
-      log
-    );
-  }
-  await waitForPendingTransactions(provider, deployer, log);
-  log(`AgentTreasury deployed at ${agentTreasury.address}`);
-
-  // Deploy ReputationRegistry (no constructor args)
-  log("Deploying ReputationRegistry...");
-  const reputationRegistry = await deploy("ReputationRegistry", {
-    from: deployer,
-    args: [],
-    gasPrice: gasPriceWithBuffer.toString(),
-    log: true,
-    waitConfirmations: 2,
-  });
-  if (reputationRegistry.receipt?.transactionHash) {
-    await waitForConfirmation(
-      reputationRegistry.receipt.transactionHash,
-      provider,
-      2,
-      log
-    );
-  }
-  await waitForPendingTransactions(provider, deployer, log);
-  log(`ReputationRegistry deployed at ${reputationRegistry.address}`);
-
-  // Deploy GridBank(usdc, oracle)
-  log("Deploying GridBank...");
-  const gridBank = await deploy("GridBank", {
-    from: deployer,
-    args: [usdcAddress, oracleAddress],
-    gasPrice: gasPriceWithBuffer.toString(),
-    log: true,
-    waitConfirmations: 2,
-  });
-  if (gridBank.receipt?.transactionHash) {
-    await waitForConfirmation(
-      gridBank.receipt.transactionHash,
-      provider,
-      2,
-      log
-    );
-  }
-  await waitForPendingTransactions(provider, deployer, log);
-  log(`GridBank deployed at ${gridBank.address}`);
 
   // Deploy VWAPDemo (no constructor args)
   log("Deploying VWAPDemo...");
@@ -218,14 +133,9 @@ const deployContracts: DeployFunction = async function (
   log(`VWAPDemo deployed at ${vwapDemo.address}`);
 
   log("=== Deployment Summary ===");
-  log(`USDC:               ${usdcAddress}`);
-  log(`AgentTreasury:      ${agentTreasury.address}`);
-  log(`ReputationRegistry: ${reputationRegistry.address}`);
-  log(`GridBank:           ${gridBank.address}`);
-  log(`GridBank Oracle:    ${oracleAddress}`);
-  log(`VWAPDemo:           ${vwapDemo.address}`);
+  log(`VWAPDemo: ${vwapDemo.address}`);
   log("=========================");
 };
 
 export default deployContracts;
-deployContracts.tags = ["AgentTreasury", "ReputationRegistry", "GridBank", "VWAPDemo"];
+deployContracts.tags = ["VWAPDemo"];

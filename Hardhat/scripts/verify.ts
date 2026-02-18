@@ -1,20 +1,9 @@
-import { ethers } from "hardhat";
 import hre from "hardhat";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 
 dotenv.config();
-
-// Compiler settings matching hardhat.config.ts (0.8.28, optimizer, no viaIR)
-function getCompilerSettings() {
-  return {
-    version: "0.8.28",
-    optimizationEnabled: true,
-    optimizationRuns: 200,
-    viaIR: false,
-  };
-}
 
 function getExplorerUrl(networkName: string, address: string): string {
   const urls: Record<string, string> = {
@@ -32,14 +21,6 @@ function getExplorerUrl(networkName: string, address: string): string {
   };
   const base = urls[networkName] || "https://etherscan.io";
   return `${base}/address/${address}`;
-}
-
-function checksumAddress(address: string): string {
-  try {
-    return ethers.getAddress(address.toLowerCase());
-  } catch (error) {
-    throw new Error(`Invalid address format: ${address}. Error: ${error}`);
-  }
 }
 
 async function verifyContract(
@@ -69,7 +50,7 @@ async function verifyContract(
 }
 
 async function main() {
-  console.log("\n=== 🔍 Contract Verification (matches deploy script) ===\n");
+  console.log("\n=== 🔍 VWAPDemo Contract Verification ===\n");
 
   const networkName = hre.network.name;
   console.log(`Network: ${networkName}`);
@@ -81,71 +62,25 @@ async function main() {
   }
 
   const deploymentsDir = path.join(__dirname, "..", "deployments", networkName);
-  if (!fs.existsSync(deploymentsDir)) {
-    console.error(`❌ No deployments found for ${networkName}`);
+  const vwapDemoPath = path.join(deploymentsDir, "VWAPDemo.json");
+
+  if (!fs.existsSync(vwapDemoPath)) {
+    console.error(`❌ No VWAPDemo deployment found for ${networkName}`);
     console.error("Run: npx hardhat deploy --network " + networkName);
     process.exit(1);
   }
 
-  function readArtifact(contractName: string): { address: string; data: any } | null {
-    const p = path.join(deploymentsDir, `${contractName}.json`);
-    if (!fs.existsSync(p)) return null;
-    try {
-      const data = JSON.parse(fs.readFileSync(p, "utf8"));
-      return { address: data.address, data };
-    } catch {
-      return null;
-    }
+  const data = JSON.parse(fs.readFileSync(vwapDemoPath, "utf8"));
+  const address = data.address;
+  if (!address) {
+    console.error("❌ VWAPDemo.json missing address");
+    process.exit(1);
   }
 
-  // --- VWAPDemo (no constructor args) ---
-  const vwapDemo = readArtifact("VWAPDemo");
-  if (vwapDemo) {
-    await verifyContract("VWAPDemo", vwapDemo.address, []);
-  } else {
-    console.log("\n⏭️  Skipping VWAPDemo (no deployment artifact)");
-  }
-
-  // --- AgentTreasury (no constructor args) ---
-  const agentTreasury = readArtifact("AgentTreasury");
-  if (agentTreasury) {
-    await verifyContract("AgentTreasury", agentTreasury.address, []);
-  } else {
-    console.log("\n⏭️  Skipping AgentTreasury (no deployment artifact)");
-  }
-
-  // --- ReputationRegistry (no constructor args) ---
-  const reputationRegistry = readArtifact("ReputationRegistry");
-  if (reputationRegistry) {
-    await verifyContract("ReputationRegistry", reputationRegistry.address, []);
-  } else {
-    console.log("\n⏭️  Skipping ReputationRegistry (no deployment artifact)");
-  }
-
-  // --- GridBank (usdc, oracle) ---
-  const gridBank = readArtifact("GridBank");
-  if (gridBank) {
-    let args = gridBank.data.args;
-    if (!args || args.length === 0) {
-      const usdcRaw = process.env.USDC;
-      const gridOracleRaw = process.env.GRID_ORACLE;
-      if (!usdcRaw) {
-        console.error("\n❌ USDC required in .env to verify GridBank (no args in artifact)");
-      } else {
-        const usdc = checksumAddress(usdcRaw);
-        const oracle = gridOracleRaw ? checksumAddress(gridOracleRaw) : (await hre.getNamedAccounts()).deployer;
-        args = [usdc, oracle];
-        await verifyContract("GridBank", gridBank.address, args);
-      }
-    } else {
-      await verifyContract("GridBank", gridBank.address, args);
-    }
-  } else {
-    console.log("\n⏭️  Skipping GridBank (no deployment artifact)");
-  }
+  await verifyContract("VWAPDemo", address, []);
 
   console.log("\n" + "=".repeat(60));
-  console.log("🎉 Verification run completed.");
+  console.log("🎉 Verification completed.");
 }
 
 main()

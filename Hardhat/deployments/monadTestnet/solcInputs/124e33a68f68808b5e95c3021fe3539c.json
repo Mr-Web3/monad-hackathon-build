@@ -1,0 +1,38 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/VWAPDemo.sol": {
+      "content": "// SPDX-License-Identifier: MIT\n\n// Website: https://www.decentralbros.io\n// Twitter / X: https://x.com/DecentralBros_\n// Telegram: https://t.me/decentralbros\n//   ____       ____       ____        _____       ____       \n// /\\  _`\\    /\\  _`\\    /\\  _`\\     /\\  __`\\    /\\  _`\\     \n// \\ \\ \\/\\ \\  \\ \\ \\L\\ \\  \\ \\ \\L\\ \\   \\ \\ \\/\\ \\   \\ \\,\\L\\_\\   \n//  \\ \\ \\ \\ \\  \\ \\  _ <'  \\ \\ ,  /    \\ \\ \\ \\ \\   \\/_\\__ \\   \n//   \\ \\ \\_\\ \\  \\ \\ \\L\\ \\  \\ \\ \\\\ \\    \\ \\ \\_\\ \\    /\\ \\L\\ \\ \n//    \\ \\____/   \\ \\____/   \\ \\ \\_\\ \\_\\   \\ \\_____\\   \\ `\\____\\\n//     \\/___/     \\/___/     \\/_/\\/ /    \\/_____/    \\/_____/\n// 01000100 01000010 01010010 01001111 01010011\n\npragma solidity ^0.8.28;\n/**\n * @title VWAPDemo\n * @notice Minimal “VWAP slicing” demo for Monad Blitz.\n * this is NOT a real swap executor. It simulates volume-weighted slice sizing\n * and allows slices to be executed in ANY order, potentially in parallel.\n *\n * Key demo properties:\n * - Creates an order with N slices (max 20)\n * - Precomputes variable slice sizes (50/100/150% pattern)\n * - executeSlice(orderId, sliceIndex) marks that slice as executed exactly once\n * - Uses a bitmask to prevent double execution (cheap + clean)\n*/\ncontract VWAPDemo {\n    struct Order {\n        address creator;\n        uint256 totalAmount;\n        uint8 numSlices; // max 20\n        uint8 executedSlices;\n        uint256 startTime;\n        bool active;\n    }\n\n    // orderId => Order\n    mapping(bytes32 => Order) public orders;\n\n    // orderId => bitmask of executed slices (bit i = 1 means executed)\n    mapping(bytes32 => uint256) private executedMask;\n\n    // orderId => sliceIndex => amount (stored as mapping(sliceId) to keep it simple)\n    mapping(bytes32 => uint256) public sliceSizes;\n\n    event OrderCreated(bytes32 indexed orderId, address indexed creator, uint256 amount, uint8 slices);\n    event SliceExecuted(bytes32 indexed orderId, uint8 sliceIndex, uint256 amount, address indexed executor);\n    event OrderCompleted(bytes32 indexed orderId);\n\n    error Max20Slices();\n    error InvalidSlices();\n    error OrderNotActive();\n    error InvalidSlice();\n    error SliceAlreadyExecuted();\n    error NotCreator();\n\n    /**\n     * @notice Create a new demo order.\n     * @param totalAmount Arbitrary amount unit (demo). You can treat as “token units”.\n     * @param numSlices 1..20\n    */\n    function createOrder(uint256 totalAmount, uint8 numSlices) external returns (bytes32 orderId) {\n        if (numSlices == 0) revert InvalidSlices();\n        if (numSlices > 20) revert Max20Slices();\n        require(totalAmount > 0, \"AMOUNT_ZERO\");\n\n        orderId = keccak256(abi.encodePacked(msg.sender, block.timestamp, totalAmount, numSlices));\n\n        Order storage o = orders[orderId];\n        // prevent overwriting in extremely rare collision case\n        require(o.creator == address(0), \"ORDER_EXISTS\");\n\n        o.creator = msg.sender;\n        o.totalAmount = totalAmount;\n        o.numSlices = numSlices;\n        o.executedSlices = 0;\n        o.startTime = block.timestamp;\n        o.active = true;\n\n        // Pre-calculate slice sizes (SIMULATED VWAP weighting)\n        // Pattern: 150%, 100%, 50%, repeating\n        uint256 baseSlice = totalAmount / numSlices;\n        uint256 sum;\n        for (uint8 i = 0; i < numSlices; i++) {\n            uint256 variation = (i % 3 == 0)\n                ? (baseSlice * 150) / 100\n                : (i % 3 == 1)\n                    ? baseSlice\n                    : (baseSlice * 50) / 100;\n\n            bytes32 sliceId = keccak256(abi.encodePacked(orderId, i));\n            sliceSizes[sliceId] = variation;\n            sum += variation;\n        }\n\n        // Optional: normalize last slice so sum roughly equals totalAmount\n        // Keeps the demo looking consistent.\n        if (sum != totalAmount) {\n            uint8 last = numSlices - 1;\n            bytes32 lastSliceId = keccak256(abi.encodePacked(orderId, last));\n            uint256 lastAmt = sliceSizes[lastSliceId];\n\n            if (sum > totalAmount) {\n                uint256 diff = sum - totalAmount;\n                sliceSizes[lastSliceId] = (diff >= lastAmt) ? 0 : (lastAmt - diff);\n            } else {\n                sliceSizes[lastSliceId] = lastAmt + (totalAmount - sum);\n            }\n        }\n\n        emit OrderCreated(orderId, msg.sender, totalAmount, numSlices);\n    }\n\n    /**\n     * @notice Execute a specific slice. This is the “parallelizable” function.\n     * For a stronger Monad story, allow ANYONE to execute slices (bots/keepers),\n     * not just the creator.\n     *\n     * If you want creator-only: uncomment the NotCreator check below.\n    */\n    function executeSlice(bytes32 orderId, uint8 sliceIndex) external {\n        Order storage o = orders[orderId];\n        if (!o.active) revert OrderNotActive();\n        if (sliceIndex >= o.numSlices) revert InvalidSlice();\n\n        // If you want creator-only execution, enable this:\n        // if (o.creator != msg.sender) revert NotCreator();\n\n        // bitmask check: prevent executing same slice twice\n        uint256 bit = (1 << sliceIndex);\n        if ((executedMask[orderId] & bit) != 0) revert SliceAlreadyExecuted();\n\n        executedMask[orderId] |= bit;\n\n        bytes32 sliceId = keccak256(abi.encodePacked(orderId, sliceIndex));\n        uint256 amount = sliceSizes[sliceId];\n\n        o.executedSlices += 1;\n        emit SliceExecuted(orderId, sliceIndex, amount, msg.sender);\n\n        if (o.executedSlices >= o.numSlices) {\n            o.active = false;\n            emit OrderCompleted(orderId);\n        }\n    }\n\n    /**\n     * @notice Helper view for UI: returns if a slice has been executed.\n    */\n    function isSliceExecuted(bytes32 orderId, uint8 sliceIndex) external view returns (bool) {\n        Order storage o = orders[orderId];\n        if (sliceIndex >= o.numSlices) return false;\n        uint256 bit = (1 << sliceIndex);\n        return (executedMask[orderId] & bit) != 0;\n    }\n\n    function getOrder(bytes32 orderId) external view returns (Order memory) {\n        return orders[orderId];\n    }\n\n    function getExecutedMask(bytes32 orderId) external view returns (uint256) {\n        return executedMask[orderId];\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "prague",
+    "viaIR": false,
+    "metadata": {
+      "bytecodeHash": "ipfs",
+      "useLiteralContent": true
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    }
+  }
+}
