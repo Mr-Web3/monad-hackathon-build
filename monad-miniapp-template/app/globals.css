@@ -1,29 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 20 10% 8%;
+    --foreground: 38 50% 92%;
+
+    --card: 20 12% 12%;
+    --card-foreground: 38 50% 92%;
+
+    --popover: 20 12% 12%;
+    --popover-foreground: 38 50% 92%;
+
+    --primary: 8 78% 52%;
+    --primary-foreground: 38 50% 95%;
+
+    --secondary: 38 72% 55%;
+    --secondary-foreground: 20 10% 8%;
+
+    --muted: 20 8% 18%;
+    --muted-foreground: 30 15% 55%;
+
+    --accent: 24 90% 55%;
+    --accent-foreground: 20 10% 8%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 20 12% 20%;
+    --input: 20 12% 20%;
+    --ring: 8 78% 52%;
+
+    --radius: 0.75rem;
+
+    --pizza-red: 8 78% 52%;
+    --crust-gold: 38 72% 55%;
+    --mozzarella: 38 50% 92%;
+    --ember: 24 90% 55%;
+    --basil: 142 50% 45%;
+    --oven-dark: 20 10% 8%;
+    --oven-glow: 24 90% 55%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
-    rgb(var(--background-start-rgb));
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+html {
+  scroll-behavior: smooth;
+  background: #000;
+}
+
+/* Hero particle shimmer */
+@keyframes particle-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+.particle-glow {
+  animation: particle-pulse 3s ease-in-out infinite;
+}
+
+/* Oven glow effect */
+.oven-glow {
+  box-shadow: 0 0 60px 20px hsl(24 90% 55% / 0.3),
+              0 0 120px 40px hsl(8 78% 52% / 0.15);
+}
+
+.oven-glow-intense {
+  box-shadow: 0 0 80px 30px hsl(24 90% 55% / 0.5),
+              0 0 160px 60px hsl(8 78% 52% / 0.25);
+}
+
+/* Heat shimmer */
+@keyframes shimmer {
+  0%, 100% { opacity: 0.3; transform: translateY(0) scaleX(1); }
+  50% { opacity: 0.6; transform: translateY(-5px) scaleX(1.02); }
+}
+
+.heat-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Steam animation */
+@keyframes steam {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  50% { opacity: 0.4; }
+  100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
+}
+
+.steam-particle {
+  animation: steam 2.5s ease-out infinite;
+}
+
+/* Confetti */
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.confetti-piece {
+  animation: confetti-fall 3s ease-in forwards;
+}
+
+/* ═══════════════════════════════════════════
+   PIZZA SHELF — ultra-HD 3D header bar
+   Multi-layered cheese/crust texture
+   ═══════════════════════════════════════════ */
+.pizza-shelf-hd {
+  position: relative;
+  overflow: visible;
+  /* Rich base: warm golden cheese gradient */
+  background:
+    linear-gradient(
+      180deg,
+      hsl(42, 78%, 66%) 0%,
+      hsl(40, 74%, 58%) 15%,
+      hsl(37, 70%, 50%) 35%,
+      hsl(34, 66%, 44%) 55%,
+      hsl(30, 62%, 38%) 75%,
+      hsl(26, 58%, 30%) 100%
+    );
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.2),
+    0 6px 16px -2px rgba(0,0,0,0.35),
+    0 14px 36px -4px rgba(0,0,0,0.25),
+    0 20px 50px -6px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,220,0.45),
+    inset 0 -1px 4px rgba(0,0,0,0.25);
+}
+
+/* Bubbly cheese texture — tiny radial blobs simulating melted surface */
+.pizza-shelf-hd::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    /* cheese bubbles — lighter spots */
+    radial-gradient(ellipse 14px 10px at 8% 30%, hsl(44, 80%, 72%, 0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 18px 12px at 22% 65%, hsl(44, 78%, 70%, 0.4) 0%, transparent 100%),
+    radial-gradient(ellipse 10px 8px at 35% 35%, hsl(46, 82%, 74%, 0.45) 0%, transparent 100%),
+    radial-gradient(ellipse 20px 14px at 50% 55%, hsl(44, 76%, 68%, 0.35) 0%, transparent 100%),
+    radial-gradient(ellipse 12px 9px at 65% 30%, hsl(45, 80%, 72%, 0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 16px 11px at 78% 60%, hsl(43, 75%, 66%, 0.4) 0%, transparent 100%),
+    radial-gradient(ellipse 11px 8px at 90% 40%, hsl(46, 82%, 74%, 0.45) 0%, transparent 100%),
+    /* dark crust pockets */
+    radial-gradient(ellipse 8px 6px at 15% 80%, hsl(25, 60%, 28%, 0.3) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 5px at 42% 20%, hsl(24, 55%, 30%, 0.25) 0%, transparent 100%),
+    radial-gradient(ellipse 9px 7px at 72% 75%, hsl(26, 58%, 26%, 0.3) 0%, transparent 100%),
+    radial-gradient(ellipse 5px 4px at 88% 25%, hsl(23, 52%, 32%, 0.2) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Glossy cheese shine — top highlight */
+.pizza-shelf-hd::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  height: 40%;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 240, 180, 0.3) 0%,
+      rgba(255, 230, 150, 0.1) 50%,
+      transparent 100%
+    );
+  pointer-events: none;
+  border-radius: 0 0 50% 50%;
+}
+
+/* Warm top lit edge */
+.pizza-shelf-top-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 3%,
+      hsl(44, 85%, 72%, 0.5) 20%,
+      hsl(48, 90%, 78%, 0.6) 50%,
+      hsl(44, 85%, 72%, 0.5) 80%,
+      transparent 97%
+    );
+}
+
+/* Bottom molten edge — thicker, glowing where cheese meets the page */
+.pizza-shelf-bottom-glow {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(38, 72%, 50%, 0.5) 0%,
+      hsl(34, 65%, 42%, 0.2) 50%,
+      transparent 100%
+    );
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   CHEESE DRIP — small decorative drips
+   (used on cards / footer edges)
+   ═══════════════════════════════════════════ */
+@keyframes cheese-drip-slow {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  40% { transform: scaleY(1.08) translateY(1px); }
+  70% { transform: scaleY(1.14) translateY(2px); }
+}
+
+@keyframes cheese-drip-fast {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  25% { transform: scaleY(1.04) translateY(0.5px); }
+  55% { transform: scaleY(1.12) translateY(1.5px); }
+  80% { transform: scaleY(1.06) translateY(1px); }
+}
+
+@keyframes cheese-drip-wobble {
+  0%, 100% { transform: scaleY(1) skewX(0deg) translateY(0); }
+  25% { transform: scaleY(1.06) skewX(0.5deg) translateY(1px); }
+  50% { transform: scaleY(1.1) skewX(-0.5deg) translateY(1.5px); }
+  75% { transform: scaleY(1.04) skewX(0.3deg) translateY(0.5px); }
+}
+
+@keyframes cheese-glisten {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.45; }
+}
+
+/* ═══════════════════════════════════════════
+   OVEN BREATHE — pulsing glow for buttons
+   ═══════════════════════════════════════════ */
+@keyframes oven-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 15px 3px hsl(24 90% 55% / 0.25),
+      0 0 30px 6px hsl(8 78% 52% / 0.1);
   }
+  50% {
+    box-shadow:
+      0 0 25px 8px hsl(24 90% 55% / 0.4),
+      0 0 50px 15px hsl(8 78% 52% / 0.2);
+  }
+}
+
+.oven-breathe {
+  animation: oven-breathe 2.5s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   SLICE FLASH — pizza cutter slash effect
+   ═══════════════════════════════════════════ */
+@keyframes slice-slash {
+  0%   { transform: translateX(-110%) rotate(-18deg); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(110%) rotate(-18deg); opacity: 0; }
+}
+
+.slice-flash {
+  animation: slice-slash 0.45s ease-out forwards;
+}
+
+/* ═══════════════════════════════════════════
+   AMBIENT PIZZA — pepperoni pulse
+   ═══════════════════════════════════════════ */
+@keyframes pepperoni-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(3deg); }
+}
+
+.pepperoni-float {
+  animation: pepperoni-float 5s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   CHEESE CARD — warm bordered cards
+   ═══════════════════════════════════════════ */
+.cheese-card {
+  border: 1px solid hsl(38, 50%, 30%);
+  box-shadow:
+    0 0 0 1px hsl(38, 50%, 20%),
+    inset 0 1px 0 hsl(38, 72%, 55% / 0.08);
+}
+
+.cheese-card:hover {
+  border-color: hsl(38, 60%, 40%);
+  box-shadow:
+    0 0 0 1px hsl(38, 50%, 25%),
+    0 0 20px hsl(24 90% 55% / 0.1),
+    inset 0 1px 0 hsl(38, 72%, 55% / 0.12);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(20 10% 8%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(20 12% 25%);
+  border-radius: 3px;
 }
