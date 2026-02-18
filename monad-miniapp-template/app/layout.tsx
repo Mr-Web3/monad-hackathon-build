@@ -19,10 +19,10 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: minikitConfig.miniapp.name,
-    description: minikitConfig.miniapp.description,
+    title: 'PizzaSlice | VWAP Trade Slicing on Monad',
+    description: 'Slice large trades for better execution. Powered by Monad parallel execution.',
     other: {
-      'base:app_id': '697972c89266edba958ff3e2', // TODO: Replace with your app ID from Coinbase Developer portal
+      'base:app_id': '697972c89266edba958ff3e2',
       'fc:frame': JSON.stringify({
         version: minikitConfig.miniapp.version,
         imageUrl: minikitConfig.miniapp.heroImageUrl,
@@ -47,7 +47,7 @@ export default async function RootLayout({
   const cookieString = headersObj.get('cookie')
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={inter.className}>
         <Providers cookies={cookieString}>
           <ResponsiveLayout>{children}</ResponsiveLayout>
