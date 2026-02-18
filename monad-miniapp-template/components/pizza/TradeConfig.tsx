@@ -1,22 +1,38 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Slider } from '@/components/ui/slider'
 import { useAccount } from 'wagmi'
 import { AppKitButton } from '@reown/appkit/react'
 import SliceEffect from './SliceEffect'
 import CheeseDrips from './CheeseDrips'
+import { getWriteErrorMessage } from '@/src/hooks/useVWAPDemoWrites'
 
 interface TradeConfigProps {
-  onBake: (tradeSize: number, sliceCount: number) => void
+  createOrder: (totalAmount: number | bigint, numSlices: number) => void
+  isPending?: boolean
+  isConfirming?: boolean
+  orderIdFromReceipt?: `0x${string}` | null
+  txHash?: `0x${string}` | null
+  error?: Error | null
+  onReset?: () => void
 }
 
-const TradeConfig: React.FC<TradeConfigProps> = ({ onBake }) => {
+const TradeConfig: React.FC<TradeConfigProps> = ({
+  createOrder,
+  isPending = false,
+  isConfirming = false,
+  orderIdFromReceipt = null,
+  txHash = null,
+  error = null,
+  onReset,
+}) => {
   const [tradeSize, setTradeSize] = useState(1000)
   const [sliceCount, setSliceCount] = useState(5)
   const [slicing, setSlicing] = useState(false)
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
 
   const priceImpact = {
     single: (tradeSize / 10000) * 2.5,
@@ -30,8 +46,15 @@ const TradeConfig: React.FC<TradeConfigProps> = ({ onBake }) => {
     setSlicing(true)
     setTimeout(() => {
       setSlicing(false)
-      onBake(tradeSize, sliceCount)
+      createOrder(tradeSize, sliceCount)
     }, 500)
+  }
+
+  const success = !!orderIdFromReceipt
+  const busy = isPending || isConfirming
+  const handleCopyOrderId = async () => {
+    if (!orderIdFromReceipt) return
+    await navigator.clipboard.writeText(orderIdFromReceipt)
   }
 
   return (
@@ -52,6 +75,50 @@ const TradeConfig: React.FC<TradeConfigProps> = ({ onBake }) => {
             Start slicing your trades.
           </p>
         </div>
+      ) : success ? (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+          <div className="text-center">
+            <h2 className="font-display text-2xl font-bold text-pizza-basil">Order created</h2>
+            <p className="text-muted-foreground font-body mt-1">Your VWAP order is onchain.</p>
+          </div>
+          <div className="relative cheese-card bg-card rounded-2xl p-6 overflow-hidden">
+            <CheeseDrips variant="mozzarella" />
+            <div className="relative space-y-4">
+              <div className="break-all rounded-xl bg-muted px-4 py-3 font-mono text-sm text-foreground">
+                {orderIdFromReceipt}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopyOrderId}
+                  className="rounded-full border border-border bg-card px-4 py-2 text-sm font-display font-semibold text-foreground hover:bg-muted/80 transition-colors"
+                >
+                  Copy ID
+                </button>
+                <Link
+                  href={`/order/${encodeURIComponent(orderIdFromReceipt)}`}
+                  className="rounded-full bg-primary px-4 py-2 text-sm font-display font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+                >
+                  Open order →
+                </Link>
+                {onReset && (
+                  <button
+                    type="button"
+                    onClick={onReset}
+                    className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  >
+                    Create another
+                  </button>
+                )}
+              </div>
+              {txHash && (
+                <p className="text-xs text-muted-foreground">
+                  Tx: <span className="font-mono">{txHash.slice(0, 10)}…{txHash.slice(-8)}</span>
+                </p>
+              )}
+            </div>
+          </div>
+        </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
           <div className="text-center">
@@ -204,6 +271,12 @@ const TradeConfig: React.FC<TradeConfigProps> = ({ onBake }) => {
             </div>
           </div>
 
+          {error && (
+            <p className="rounded-xl bg-destructive/15 border border-border p-3 text-sm text-destructive">
+              {getWriteErrorMessage(error)}
+            </p>
+          )}
+
           {/* BAKE PIZZA button — full oven glow treatment */}
           <div className="relative">
             {/* Oven glow backdrop */}
@@ -212,10 +285,12 @@ const TradeConfig: React.FC<TradeConfigProps> = ({ onBake }) => {
               style={{ zIndex: 0 }}
             />
             <motion.button
+              type="button"
               onClick={handleBake}
-              className="relative z-10 w-full py-4 bg-primary text-primary-foreground rounded-xl font-display font-bold text-lg overflow-hidden"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              disabled={busy}
+              className="relative z-10 w-full py-4 bg-primary text-primary-foreground rounded-xl font-display font-bold text-lg overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
+              whileHover={!busy ? { scale: 1.02 } : undefined}
+              whileTap={!busy ? { scale: 0.98 } : undefined}
               style={{
                 boxShadow:
                   '0 0 30px 8px hsl(24 90% 55% / 0.3), 0 0 60px 15px hsl(8 78% 52% / 0.15), inset 0 1px 0 hsl(45 80% 75% / 0.2)',
@@ -234,6 +309,26 @@ const TradeConfig: React.FC<TradeConfigProps> = ({ onBake }) => {
                     className="relative z-10"
                   >
                     Slicing...
+                  </motion.span>
+                ) : isPending ? (
+                  <motion.span
+                    key="pending"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="relative z-10"
+                  >
+                    Confirm in wallet…
+                  </motion.span>
+                ) : isConfirming ? (
+                  <motion.span
+                    key="confirming"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="relative z-10"
+                  >
+                    Confirming…
                   </motion.span>
                 ) : (
                   <motion.span

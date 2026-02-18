@@ -17,6 +17,11 @@ interface OrderDetailPageProps {
   orderId: string
 }
 
+function safeSliceCount(n: number | bigint | undefined | null): number {
+  const v = Number(n)
+  return Number.isFinite(v) && v >= 0 ? v : 0
+}
+
 function SliceCell({
   orderId,
   index,
@@ -37,20 +42,23 @@ function SliceCell({
 
   return (
     <div
-      className={`rounded-lg border p-3 text-center ${
+      className={`rounded-lg border border-border p-3 text-center ${
         executed
-          ? 'border-green-200 bg-green-50 dark:border-green-900/50 dark:bg-green-950/30'
-          : 'border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900'
+          ? 'bg-primary/10 border-primary/30'
+          : 'bg-card'
       }`}
     >
-      <div className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+      <div className="text-xs font-medium text-muted-foreground">
         Slice {index + 1}
       </div>
-      <div className="mt-0.5 font-mono text-sm text-neutral-900 dark:text-white">
+      <div className="mt-0.5 font-mono text-sm text-foreground">
         {loadingAmount ? '…' : amount != null ? String(amount) : '—'}
+        {!loadingAmount && amount !== undefined && amount === BigInt(0) && (
+          <span className="ml-1 text-xs text-amber-500" title="sliceId may not match contract">(sliceId calc mismatch?)</span>
+        )}
       </div>
       {executed ? (
-        <span className="mt-2 inline-block text-xs font-medium text-green-700 dark:text-green-400">
+        <span className="mt-2 inline-block text-xs font-medium text-primary">
           Done
         </span>
       ) : (
@@ -58,7 +66,7 @@ function SliceCell({
           type="button"
           onClick={() => onExecute(index)}
           disabled={!canExecute || busy}
-          className="mt-2 w-full rounded bg-neutral-900 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 disabled:opacity-50 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+          className="mt-2 w-full rounded bg-primary py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50 transition-opacity"
         >
           {busy ? 'Executing…' : 'Execute'}
         </button>
@@ -74,7 +82,7 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
   const { order, isLoading: orderLoading, isError: orderError, refetch: refetchOrder } = useOrder(orderId)
   const { executeSlice, isPending: writePending, isConfirming: writeConfirming, isSuccess: writeSuccess, error: writeError, reset: resetWrite, txHash: lastTxHash } = useExecuteSlice()
 
-  const numSlices = order != null ? Number(order.numSlices) : 0
+  const numSlices = order != null ? safeSliceCount(order.numSlices) : 0
   const { firstUnexecutedIndex, refetch: refetchMask } = useExecutedMask(orderId)
   const [refreshKey, setRefreshKey] = useState(0)
 
@@ -96,7 +104,7 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
 
   useEffect(() => {
     if (refreshKey === 0 || !executeAllRemaining || !order?.active) return
-    const next = firstUnexecutedIndex(Number(order.numSlices))
+    const next = firstUnexecutedIndex(numSlices)
     if (next != null) {
       handleExecute(next)
     } else {
@@ -106,143 +114,147 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
   }, [refreshKey, executeAllRemaining, order?.active, numSlices, firstUnexecutedIndex])
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/"
-          className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
-        >
-          ← Back
-        </Link>
-      </div>
-
-      <h1 className="text-2xl font-bold text-neutral-900 dark:text-white sm:text-3xl">
-        Order detail
-      </h1>
-      <p className="break-all font-mono text-sm text-neutral-500 dark:text-neutral-400">
-        {orderId}
-      </p>
-
-      <NetworkHelpers latestTxHash={lastTxHash} className="mb-4" />
-
-      {orderError && (
-        <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950/50 dark:text-red-200">
-          Failed to load order. Check the order ID and network (Monad Testnet).
-        </p>
-      )}
-
-      {writeError && (
-        <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950/50 dark:text-red-200">
-          {getWriteErrorMessage(writeError)}
-        </p>
-      )}
-
-      {orderLoading ? (
-        <p className="text-neutral-500">Loading order…</p>
-      ) : order ? (
-        <>
-          <div className="grid gap-4 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 sm:grid-cols-2">
-            <div>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                Creator
-              </span>
-              <p className="break-all font-mono text-sm text-neutral-900 dark:text-white">
-                {order.creator}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                Total amount
-              </span>
-              <p className="font-mono text-sm text-neutral-900 dark:text-white">
-                {String(order.totalAmount)}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                Slices
-              </span>
-              <p className="font-mono text-sm text-neutral-900 dark:text-white">
-                {order.numSlices}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                Executed
-              </span>
-              <p className="font-mono text-sm text-neutral-900 dark:text-white">
-                {order.executedSlices} / {order.numSlices}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                Active
-              </span>
-              <p className="text-sm text-neutral-900 dark:text-white">
-                {order.active ? 'Yes' : 'No'}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                Start time
-              </span>
-              <p className="font-mono text-sm text-neutral-900 dark:text-white">
-                {order.startTime != null ? String(order.startTime) : '—'}
-              </p>
-            </div>
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
+            >
+              ← Back
+            </Link>
           </div>
 
-          <ProgressBar
-            value={Number(order.executedSlices)}
-            max={numSlices}
-            label="Slices executed"
-          />
+          <h1 className="text-2xl font-bold text-foreground sm:text-3xl font-display">
+            Order detail
+          </h1>
+          <p className="break-all font-mono text-sm text-muted-foreground">
+            {orderId}
+          </p>
 
-          <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {Array.from({ length: numSlices }, (_, i) => (
-              <SliceCell
-                key={i}
-                orderId={orderId}
-                index={i}
-                orderActive={order.active}
-                onExecute={handleExecute}
-                isExecutingIndex={executingIndex}
+          <NetworkHelpers latestTxHash={lastTxHash} className="mb-4" />
+
+          {orderError && (
+            <p className="rounded-lg bg-destructive/15 border border-border p-3 text-sm text-destructive">
+              Failed to load order. Check the order ID and network (Monad Testnet).
+            </p>
+          )}
+
+          {writeError && (
+            <p className="rounded-lg bg-destructive/15 border border-border p-3 text-sm text-destructive">
+              {getWriteErrorMessage(writeError)}
+            </p>
+          )}
+
+          {orderLoading ? (
+            <p className="text-muted-foreground">Loading order…</p>
+          ) : order ? (
+            <>
+              <div className="grid gap-4 rounded-xl border border-border bg-card p-4 sm:grid-cols-2">
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Creator
+                  </span>
+                  <p className="break-all font-mono text-sm text-card-foreground">
+                    {order.creator}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Total amount
+                  </span>
+                  <p className="font-mono text-sm text-card-foreground">
+                    {String(order.totalAmount)}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Slices
+                  </span>
+                  <p className="font-mono text-sm text-card-foreground">
+                    {safeSliceCount(order.numSlices)}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Executed
+                  </span>
+                  <p className="font-mono text-sm text-card-foreground">
+                    {safeSliceCount(order.executedSlices)} / {safeSliceCount(order.numSlices)}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Active
+                  </span>
+                  <p className="text-sm text-card-foreground">
+                    {order.active ? 'Yes' : 'No'}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Start time
+                  </span>
+                  <p className="font-mono text-sm text-card-foreground">
+                    {order.startTime != null ? String(order.startTime) : '—'}
+                  </p>
+                </div>
+              </div>
+
+              <ProgressBar
+                value={safeSliceCount(order.executedSlices)}
+                max={numSlices}
+                label="Slices executed"
               />
-            ))}
-          </div>
 
-          {order.active && (() => {
+              <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {Array.from({ length: numSlices }, (_, i) => (
+                  <SliceCell
+                    key={i}
+                    orderId={orderId}
+                    index={i}
+                    orderActive={order.active}
+                    onExecute={handleExecute}
+                    isExecutingIndex={executingIndex}
+                  />
+                ))}
+              </div>
+
+              {order.active && (() => {
             const next = firstUnexecutedIndex(numSlices)
             const busy = writePending || writeConfirming || executingIndex !== null
-            return (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => { if (next != null) handleExecute(next) }}
-                  disabled={busy || next == null}
-                  className="rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                >
-                  {next == null ? 'All slices executed' : busy ? 'Executing…' : `Execute next (slice ${next + 1})`}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (next == null) return
-                    setExecuteAllRemaining(true)
-                    handleExecute(next)
-                  }}
-                  disabled={busy || next == null}
-                  className="rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                >
-                  Execute all remaining
-                </button>
-              </div>
-            )
-          })()}
-        </>
-      ) : null}
+                return (
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { if (next != null) handleExecute(next) }}
+                      disabled={busy || next == null}
+                      className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/50 disabled:opacity-50 transition-colors"
+                    >
+                      {next == null ? 'All slices executed' : busy ? 'Executing…' : `Execute next (slice ${next + 1})`}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (next == null) return
+                        setExecuteAllRemaining(true)
+                        handleExecute(next)
+                      }}
+                      disabled={busy || next == null}
+                      className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/50 disabled:opacity-50 transition-colors"
+                    >
+                      Execute all remaining
+                    </button>
+                  </div>
+                )
+              })()}
+            </>
+          ) : null}
 
-      <ContractLiveFeed filterOrderId={orderId} maxHeight="10rem" />
+          <ContractLiveFeed filterOrderId={orderId} maxHeight="10rem" />
+        </div>
+      </div>
     </div>
   )
 }

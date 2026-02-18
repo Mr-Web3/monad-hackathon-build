@@ -7,9 +7,10 @@ import {
   InfoSections,
   EmberParticles,
   PizzaDecorations,
+  TradeConfig,
 } from '@/components/pizza'
 import { Header } from '@/components/layout/header'
-import { OrderCreateCard, OrderViewerCard, RecentOrdersList } from '@/components/vwap'
+import { OrderViewerCard, RecentOrdersList } from '@/components/vwap'
 import { ContractLiveFeed } from '@/src/components/LiveFeed'
 import { NetworkHelpers } from '@/src/components/NetworkHelpers'
 import { useCreateOrder } from '@/src/hooks/useVWAPDemoWrites'
@@ -92,12 +93,12 @@ export function HomePage() {
       <AnimatePresence>
         {showTrade && (
           <motion.div
-            ref={tradeRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             className="relative bg-background min-h-screen overflow-hidden"
           >
+            <div ref={tradeRef} className="absolute top-0 left-0 right-0 h-1" aria-hidden />
             <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-0" />
             <PizzaDecorations />
             <EmberParticles count={10} />
@@ -117,18 +118,17 @@ export function HomePage() {
             <main className="relative z-10 max-w-2xl mx-auto px-6 pt-28 pb-16 space-y-6">
               <NetworkHelpers latestTxHash={txHash} className="mt-2" />
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                <OrderCreateCard
-                  createOrder={handleCreateOrder}
-                  isPending={isPending}
-                  isConfirming={isConfirming}
-                  orderIdFromReceipt={orderIdFromReceipt}
-                  txHash={txHash}
-                  error={error}
-                  onReset={reset}
-                />
-                <OrderViewerCard />
-              </div>
+              <TradeConfig
+                createOrder={handleCreateOrder}
+                isPending={isPending}
+                isConfirming={isConfirming}
+                orderIdFromReceipt={orderIdFromReceipt}
+                txHash={txHash}
+                error={error}
+                onReset={reset}
+              />
+
+              <OrderViewerCard />
 
               <RecentOrdersList />
               <ContractLiveFeed maxHeight="14rem" />

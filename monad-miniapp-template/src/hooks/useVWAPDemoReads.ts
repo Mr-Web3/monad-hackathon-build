@@ -76,8 +76,8 @@ export type RecentOrderRow = {
 }
 
 const RECENT_ORDERS_LIMIT = 10
-/** Many RPCs (e.g. Alchemy) limit eth_getLogs to 1000 blocks per request. */
-const RECENT_ORDERS_BLOCK_RANGE = 1000
+/** Many RPCs (e.g. Alchemy) limit eth_getLogs to 1000 blocks. Use 999 so fromBlock..toBlock (inclusive) = 1000 blocks. */
+const RECENT_ORDERS_BLOCK_RANGE = 999
 
 /**
  * Fetch recent OrderCreated events via getLogs (no DB). Returns last N orderIds with creator and amount.
@@ -98,9 +98,10 @@ export function useRecentOrders(): {
     try {
       const { getPublicClient } = await import("@/lib/publicClient")
       const client = getPublicClient()
-      const toBlock = "latest"
       const blockNumber = await client.getBlockNumber()
       const fromBlock = blockNumber - BigInt(RECENT_ORDERS_BLOCK_RANGE)
+      // Use numeric toBlock so range is exactly ≤1000 (Alchemy eth_getLogs limit)
+      const toBlock = blockNumber
       const logs = await client.getContractEvents({
         address: VWAP_DEMO_ADDRESS as `0x${string}`,
         abi: VWAP_DEMO_ABI,
