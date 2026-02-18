@@ -1,14 +1,14 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useState } from "react"
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-import { decodeEventLog, type Log } from "viem"
-import { VWAP_DEMO_ADDRESS, VWAP_DEMO_ABI } from "@/src/contracts/vwapDemo"
-import { parseOrderId } from "@/src/hooks/useVWAPDemoReads"
+import { useCallback, useEffect, useState } from 'react'
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { decodeEventLog, type Log } from 'viem'
+import { VWAP_DEMO_ADDRESS, VWAP_DEMO_ABI } from '@/src/contracts/vwapDemo'
+import { parseOrderId } from '@/src/hooks/useVWAPDemoReads'
 
 const MONAD_TESTNET_CHAIN_ID = 10143
 
-const ORDER_CREATED_EVENT = "OrderCreated"
+const ORDER_CREATED_EVENT = 'OrderCreated'
 
 function getOrderIdFromReceipt(logs: Log[]): `0x${string}` | null {
   for (const log of logs) {
@@ -30,14 +30,16 @@ function getOrderIdFromReceipt(logs: Log[]): `0x${string}` | null {
 
 /** User-friendly message for known contract errors */
 export function getWriteErrorMessage(error: unknown): string {
-  if (!error) return "Transaction failed"
+  if (!error) return 'Transaction failed'
   const msg = error instanceof Error ? error.message : String(error)
-  if (msg.includes("InvalidSlices") || msg.includes("InvalidSlice")) return "Invalid slice count or index."
-  if (msg.includes("Max20Slices")) return "Maximum 20 slices allowed."
-  if (msg.includes("OrderNotActive")) return "Order is no longer active."
-  if (msg.includes("SliceAlreadyExecuted")) return "This slice was already executed."
-  if (msg.includes("NotCreator")) return "Only the order creator can perform this action."
-  if (msg.includes("User rejected") || msg.includes("user rejected")) return "Transaction was rejected."
+  if (msg.includes('InvalidSlices') || msg.includes('InvalidSlice'))
+    return 'Invalid slice count or index.'
+  if (msg.includes('Max20Slices')) return 'Maximum 20 slices allowed.'
+  if (msg.includes('OrderNotActive')) return 'Order is no longer active.'
+  if (msg.includes('SliceAlreadyExecuted')) return 'This slice was already executed.'
+  if (msg.includes('NotCreator')) return 'Only the order creator can perform this action.'
+  if (msg.includes('User rejected') || msg.includes('user rejected'))
+    return 'Transaction was rejected.'
   return msg.length > 80 ? `${msg.slice(0, 77)}…` : msg
 }
 
@@ -61,20 +63,24 @@ export function useCreateOrder(): {
     reset: resetWrite,
   } = useWriteContract()
 
-  const { data: receipt, isLoading: isConfirming, isSuccess: receiptSuccess } = useWaitForTransactionReceipt({
+  const {
+    data: receipt,
+    isLoading: isConfirming,
+    isSuccess: receiptSuccess,
+  } = useWaitForTransactionReceipt({
     hash: hash ?? undefined,
     query: { enabled: !!hash },
   })
 
   const createOrder = useCallback(
     (totalAmount: bigint | number, numSlices: number) => {
-      const amount = typeof totalAmount === "bigint" ? totalAmount : BigInt(totalAmount)
+      const amount = typeof totalAmount === 'bigint' ? totalAmount : BigInt(totalAmount)
       setOrderIdFromReceipt(null)
       setTxHash(null)
       writeContract({
         address: VWAP_DEMO_ADDRESS as `0x${string}`,
         abi: VWAP_DEMO_ABI,
-        functionName: "createOrder",
+        functionName: 'createOrder',
         args: [amount, numSlices],
         chainId: MONAD_TESTNET_CHAIN_ID,
       })
@@ -143,7 +149,7 @@ export function useExecuteSlice(): {
       writeContract({
         address: VWAP_DEMO_ADDRESS as `0x${string}`,
         abi: VWAP_DEMO_ABI,
-        functionName: "executeSlice",
+        functionName: 'executeSlice',
         args: [parsed, sliceIndex],
         chainId: MONAD_TESTNET_CHAIN_ID,
       })

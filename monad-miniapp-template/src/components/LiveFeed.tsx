@@ -55,22 +55,19 @@ export function ContractLiveFeed({
   const [entries, setEntries] = useState<LiveFeedEntry[]>([])
   const seenRef = useRef<Set<string>>(new Set())
 
-  const addEntry = useCallback(
-    (entry: LiveFeedEntry) => {
-      const key = entry.id
-      if (seenRef.current.has(key)) return
-      seenRef.current.add(key)
-      setEntries((prev) => {
-        const next = [entry, ...prev].slice(0, MAX_ENTRIES)
-        if (next.length >= MAX_ENTRIES) {
-          const dropped = prev[prev.length - 1]
-          if (dropped && 'id' in dropped) seenRef.current.delete(dropped.id)
-        }
-        return next
-      })
-    },
-    []
-  )
+  const addEntry = useCallback((entry: LiveFeedEntry) => {
+    const key = entry.id
+    if (seenRef.current.has(key)) return
+    seenRef.current.add(key)
+    setEntries((prev) => {
+      const next = [entry, ...prev].slice(0, MAX_ENTRIES)
+      if (next.length >= MAX_ENTRIES) {
+        const dropped = prev[prev.length - 1]
+        if (dropped && 'id' in dropped) seenRef.current.delete(dropped.id)
+      }
+      return next
+    })
+  }, [])
 
   const handleOrderCreated = useCallback(
     (logs: Log[]) => {
@@ -80,11 +77,19 @@ export function ContractLiveFeed({
             abi: VWAP_DEMO_ABI,
             data: log.data,
             topics: log.topics,
-          }) as { eventName: string; args?: { orderId?: `0x${string}`; creator?: string; amount?: bigint; slices?: number } }
+          }) as {
+            eventName: string
+            args?: { orderId?: `0x${string}`; creator?: string; amount?: bigint; slices?: number }
+          }
           if (decoded.eventName !== 'OrderCreated' || !decoded.args?.orderId) continue
           const { orderId, creator = '', amount = BigInt(0), slices = 0 } = decoded.args
           const orderIdStr = orderId
-          if (filterOrderId != null && filterOrderId !== '' && normalizeOrderId(orderIdStr) !== normalizeOrderId(filterOrderId)) continue
+          if (
+            filterOrderId != null &&
+            filterOrderId !== '' &&
+            normalizeOrderId(orderIdStr) !== normalizeOrderId(filterOrderId)
+          )
+            continue
           const id = `OrderCreated-${log.transactionHash}-${log.logIndex ?? 0}`
           addEntry({
             id,
@@ -112,11 +117,24 @@ export function ContractLiveFeed({
             abi: VWAP_DEMO_ABI,
             data: log.data,
             topics: log.topics,
-          }) as { eventName: string; args?: { orderId?: `0x${string}`; sliceIndex?: number; amount?: bigint; executor?: string } }
+          }) as {
+            eventName: string
+            args?: {
+              orderId?: `0x${string}`
+              sliceIndex?: number
+              amount?: bigint
+              executor?: string
+            }
+          }
           if (decoded.eventName !== 'SliceExecuted' || !decoded.args?.orderId) continue
           const { orderId, sliceIndex = 0, amount = BigInt(0), executor = '' } = decoded.args
           const orderIdStr = orderId
-          if (filterOrderId != null && filterOrderId !== '' && normalizeOrderId(orderIdStr) !== normalizeOrderId(filterOrderId)) continue
+          if (
+            filterOrderId != null &&
+            filterOrderId !== '' &&
+            normalizeOrderId(orderIdStr) !== normalizeOrderId(filterOrderId)
+          )
+            continue
           const id = `SliceExecuted-${log.transactionHash}-${log.logIndex ?? 0}`
           addEntry({
             id,

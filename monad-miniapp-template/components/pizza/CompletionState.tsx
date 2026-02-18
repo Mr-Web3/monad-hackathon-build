@@ -33,7 +33,7 @@ const CompletionState: React.FC<CompletionStateProps> = ({ tradeSize, sliceCount
         size: 4 + Math.random() * 8,
         rotation: Math.random() * 360,
       })),
-    [],
+    []
   )
 
   return (
@@ -86,9 +86,7 @@ const CompletionState: React.FC<CompletionStateProps> = ({ tradeSize, sliceCount
           Order Filled!
         </motion.div>
         <h2 className="font-display text-3xl font-bold text-foreground mb-2">Order Filled!</h2>
-        <p className="text-muted-foreground font-body mb-6">
-          Order filled with minimal slippage.
-        </p>
+        <p className="text-muted-foreground font-body mb-6">Order filled with minimal slippage.</p>
 
         <div className="grid grid-cols-3 gap-4 bg-muted rounded-xl p-4 mb-6">
           <div>

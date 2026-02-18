@@ -24,7 +24,7 @@ const EmberParticles: React.FC<EmberParticlesProps> = ({ count = 20 }) => {
         size: 2 + Math.random() * 4,
         opacity: 0.3 + Math.random() * 0.5,
       })),
-    [count],
+    [count]
   )
 
   if (!windowHeight) return null

@@ -48,9 +48,7 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
   if (!isInMiniApp || !context) {
     return (
       <SafeAreaContainer insets={insets}>
-        <div className="min-h-screen">
-          {children}
-        </div>
+        <div className="min-h-screen">{children}</div>
       </SafeAreaContainer>
     )
   }

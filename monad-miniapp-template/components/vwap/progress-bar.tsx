@@ -15,9 +15,7 @@ export function ProgressBar({ value, max, label, className = '' }: ProgressBarPr
     <div className={`w-full ${className}`}>
       {(label ?? v !== m) && (
         <div className="mb-1 flex justify-between text-sm">
-          {label && (
-            <span className="font-medium text-foreground">{label}</span>
-          )}
+          {label && <span className="font-medium text-foreground">{label}</span>}
           <span className="text-muted-foreground">
             {v} / {m}
           </span>

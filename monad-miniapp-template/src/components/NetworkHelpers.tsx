@@ -7,13 +7,15 @@ const MONAD_TESTNET_CHAIN_ID = 10143
 const DEFAULT_FAUCET_URL = 'https://faucet.monad.xyz'
 const DEFAULT_EXPLORER_URL = 'https://testnet.monadscan.com'
 
-const explorerBase = typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_EXPLORER_BASE_URL?.trim()
-  ? process.env.NEXT_PUBLIC_EXPLORER_BASE_URL.replace(/\/$/, '')
-  : DEFAULT_EXPLORER_URL
+const explorerBase =
+  typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_EXPLORER_BASE_URL?.trim()
+    ? process.env.NEXT_PUBLIC_EXPLORER_BASE_URL.replace(/\/$/, '')
+    : DEFAULT_EXPLORER_URL
 
-const faucetUrl = typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_FAUCET_URL?.trim()
-  ? process.env.NEXT_PUBLIC_FAUCET_URL
-  : DEFAULT_FAUCET_URL
+const faucetUrl =
+  typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_FAUCET_URL?.trim()
+    ? process.env.NEXT_PUBLIC_FAUCET_URL
+    : DEFAULT_FAUCET_URL
 
 interface NetworkHelpersProps {
   /** Optional: show link for this tx hash (e.g. latest user tx). */

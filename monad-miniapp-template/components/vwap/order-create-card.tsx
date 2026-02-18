@@ -77,7 +77,10 @@ export function OrderCreateCard({
           </div>
           {txHash && (
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Tx: <span className="font-mono">{txHash.slice(0, 10)}…{txHash.slice(-8)}</span>
+              Tx:{' '}
+              <span className="font-mono">
+                {txHash.slice(0, 10)}…{txHash.slice(-8)}
+              </span>
             </p>
           )}
         </div>

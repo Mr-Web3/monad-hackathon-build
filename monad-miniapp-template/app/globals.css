@@ -56,7 +56,12 @@
     font-family: 'Inter', sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Space Grotesk', sans-serif;
   }
 }
@@ -68,8 +73,13 @@ html {
 
 /* Hero particle shimmer */
 @keyframes particle-pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .particle-glow {
@@ -78,19 +88,28 @@ html {
 
 /* Oven glow effect */
 .oven-glow {
-  box-shadow: 0 0 60px 20px hsl(24 90% 55% / 0.3),
-              0 0 120px 40px hsl(8 78% 52% / 0.15);
+  box-shadow:
+    0 0 60px 20px hsl(24 90% 55% / 0.3),
+    0 0 120px 40px hsl(8 78% 52% / 0.15);
 }
 
 .oven-glow-intense {
-  box-shadow: 0 0 80px 30px hsl(24 90% 55% / 0.5),
-              0 0 160px 60px hsl(8 78% 52% / 0.25);
+  box-shadow:
+    0 0 80px 30px hsl(24 90% 55% / 0.5),
+    0 0 160px 60px hsl(8 78% 52% / 0.25);
 }
 
 /* Heat shimmer */
 @keyframes shimmer {
-  0%, 100% { opacity: 0.3; transform: translateY(0) scaleX(1); }
-  50% { opacity: 0.6; transform: translateY(-5px) scaleX(1.02); }
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-5px) scaleX(1.02);
+  }
 }
 
 .heat-shimmer {
@@ -99,9 +118,17 @@ html {
 
 /* Steam animation */
 @keyframes steam {
-  0% { opacity: 0; transform: translateY(0) scale(0.5); }
-  50% { opacity: 0.4; }
-  100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(1.5);
+  }
 }
 
 .steam-particle {
@@ -110,8 +137,14 @@ html {
 
 /* Confetti */
 @keyframes confetti-fall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
 }
 
 .confetti-piece {
@@ -126,23 +159,22 @@ html {
   position: relative;
   overflow: visible;
   /* Rich base: warm golden cheese gradient */
-  background:
-    linear-gradient(
-      180deg,
-      hsl(42, 78%, 66%) 0%,
-      hsl(40, 74%, 58%) 15%,
-      hsl(37, 70%, 50%) 35%,
-      hsl(34, 66%, 44%) 55%,
-      hsl(30, 62%, 38%) 75%,
-      hsl(26, 58%, 30%) 100%
-    );
+  background: linear-gradient(
+    180deg,
+    hsl(42, 78%, 66%) 0%,
+    hsl(40, 74%, 58%) 15%,
+    hsl(37, 70%, 50%) 35%,
+    hsl(34, 66%, 44%) 55%,
+    hsl(30, 62%, 38%) 75%,
+    hsl(26, 58%, 30%) 100%
+  );
   box-shadow:
-    0 2px 4px rgba(0,0,0,0.2),
-    0 6px 16px -2px rgba(0,0,0,0.35),
-    0 14px 36px -4px rgba(0,0,0,0.25),
-    0 20px 50px -6px rgba(0,0,0,0.15),
-    inset 0 1px 0 rgba(255,255,220,0.45),
-    inset 0 -1px 4px rgba(0,0,0,0.25);
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 6px 16px -2px rgba(0, 0, 0, 0.35),
+    0 14px 36px -4px rgba(0, 0, 0, 0.25),
+    0 20px 50px -6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 220, 0.45),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* Bubbly cheese texture — tiny radial blobs simulating melted surface */
@@ -176,13 +208,12 @@ html {
   left: 5%;
   right: 5%;
   height: 40%;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 240, 180, 0.3) 0%,
-      rgba(255, 230, 150, 0.1) 50%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(255, 240, 180, 0.3) 0%,
+    rgba(255, 230, 150, 0.1) 50%,
+    transparent 100%
+  );
   pointer-events: none;
   border-radius: 0 0 50% 50%;
 }
@@ -194,15 +225,14 @@ html {
   left: 0;
   right: 0;
   height: 1px;
-  background:
-    linear-gradient(
-      90deg,
-      transparent 3%,
-      hsl(44, 85%, 72%, 0.5) 20%,
-      hsl(48, 90%, 78%, 0.6) 50%,
-      hsl(44, 85%, 72%, 0.5) 80%,
-      transparent 97%
-    );
+  background: linear-gradient(
+    90deg,
+    transparent 3%,
+    hsl(44, 85%, 72%, 0.5) 20%,
+    hsl(48, 90%, 78%, 0.6) 50%,
+    hsl(44, 85%, 72%, 0.5) 80%,
+    transparent 97%
+  );
 }
 
 /* Bottom molten edge — thicker, glowing where cheese meets the page */
@@ -212,13 +242,12 @@ html {
   left: 0;
   right: 0;
   height: 8px;
-  background:
-    linear-gradient(
-      180deg,
-      hsl(38, 72%, 50%, 0.5) 0%,
-      hsl(34, 65%, 42%, 0.2) 50%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    180deg,
+    hsl(38, 72%, 50%, 0.5) 0%,
+    hsl(34, 65%, 42%, 0.2) 50%,
+    transparent 100%
+  );
   filter: blur(2px);
   pointer-events: none;
 }
@@ -228,35 +257,66 @@ html {
    (used on cards / footer edges)
    ═══════════════════════════════════════════ */
 @keyframes cheese-drip-slow {
-  0%, 100% { transform: scaleY(1) translateY(0); }
-  40% { transform: scaleY(1.08) translateY(1px); }
-  70% { transform: scaleY(1.14) translateY(2px); }
+  0%,
+  100% {
+    transform: scaleY(1) translateY(0);
+  }
+  40% {
+    transform: scaleY(1.08) translateY(1px);
+  }
+  70% {
+    transform: scaleY(1.14) translateY(2px);
+  }
 }
 
 @keyframes cheese-drip-fast {
-  0%, 100% { transform: scaleY(1) translateY(0); }
-  25% { transform: scaleY(1.04) translateY(0.5px); }
-  55% { transform: scaleY(1.12) translateY(1.5px); }
-  80% { transform: scaleY(1.06) translateY(1px); }
+  0%,
+  100% {
+    transform: scaleY(1) translateY(0);
+  }
+  25% {
+    transform: scaleY(1.04) translateY(0.5px);
+  }
+  55% {
+    transform: scaleY(1.12) translateY(1.5px);
+  }
+  80% {
+    transform: scaleY(1.06) translateY(1px);
+  }
 }
 
 @keyframes cheese-drip-wobble {
-  0%, 100% { transform: scaleY(1) skewX(0deg) translateY(0); }
-  25% { transform: scaleY(1.06) skewX(0.5deg) translateY(1px); }
-  50% { transform: scaleY(1.1) skewX(-0.5deg) translateY(1.5px); }
-  75% { transform: scaleY(1.04) skewX(0.3deg) translateY(0.5px); }
+  0%,
+  100% {
+    transform: scaleY(1) skewX(0deg) translateY(0);
+  }
+  25% {
+    transform: scaleY(1.06) skewX(0.5deg) translateY(1px);
+  }
+  50% {
+    transform: scaleY(1.1) skewX(-0.5deg) translateY(1.5px);
+  }
+  75% {
+    transform: scaleY(1.04) skewX(0.3deg) translateY(0.5px);
+  }
 }
 
 @keyframes cheese-glisten {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.45; }
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }
 
 /* ═══════════════════════════════════════════
    OVEN BREATHE — pulsing glow for buttons
    ═══════════════════════════════════════════ */
 @keyframes oven-breathe {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
       0 0 15px 3px hsl(24 90% 55% / 0.25),
       0 0 30px 6px hsl(8 78% 52% / 0.1);
@@ -276,10 +336,20 @@ html {
    SLICE FLASH — pizza cutter slash effect
    ═══════════════════════════════════════════ */
 @keyframes slice-slash {
-  0%   { transform: translateX(-110%) rotate(-18deg); opacity: 0; }
-  20%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateX(110%) rotate(-18deg); opacity: 0; }
+  0% {
+    transform: translateX(-110%) rotate(-18deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(110%) rotate(-18deg);
+    opacity: 0;
+  }
 }
 
 .slice-flash {
@@ -290,8 +360,13 @@ html {
    AMBIENT PIZZA — pepperoni pulse
    ═══════════════════════════════════════════ */
 @keyframes pepperoni-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-6px) rotate(3deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(3deg);
+  }
 }
 
 .pepperoni-float {

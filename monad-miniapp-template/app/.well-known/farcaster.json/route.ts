@@ -14,12 +14,12 @@ const ROOT_URL =
 export const minikitConfig = {
   // TODO: Add your own account association from the Coinbase Developer portal
   accountAssociation: {
-    header: '',
-    payload: '',
-    signature: '',
+    header: 'eyJmaWQiOjc4ODgwMCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweGE0MzkzODY2RDM3ZEUxOTkxNjQ4MDMxNzc2QkI0NkFjNEYyMUNkMDEifQ',
+    payload: 'eyJkb21haW4iOiJwaXp6YS1zbGljZS1naWx0LnZlcmNlbC5hcHAifQ',
+    signature: '/6BlbtRZaQqZq2lha2a0x8gWvG/bdiIQESw/ZNM5ZCtn1+CNwJrAv3PNOULFI+/YZ6M7Cq/P8iEYu+kUYCcqmhs=',
   },
   baseBuilder: {
-    allowedAddresses: ["0x1d0B2cfeBaBB59b3AF59ff77DeF5397Ce4Be9e77"],
+    allowedAddresses: ['0x1d0B2cfeBaBB59b3AF59ff77DeF5397Ce4Be9e77'],
   },
   miniapp: {
     version: '1',

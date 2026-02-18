@@ -39,8 +39,7 @@ const TradeConfig: React.FC<TradeConfigProps> = ({
     sliced: ((tradeSize / 10000) * 2.5) / Math.sqrt(sliceCount),
     reduction: 0,
   }
-  priceImpact.reduction =
-    ((priceImpact.single - priceImpact.sliced) / priceImpact.single) * 100
+  priceImpact.reduction = ((priceImpact.single - priceImpact.sliced) / priceImpact.single) * 100
 
   const handleBake = () => {
     setSlicing(true)
@@ -71,9 +70,7 @@ const TradeConfig: React.FC<TradeConfigProps> = ({
               <AppKitButton label="Connect Wallet" />
             </div>
           </div>
-          <p className="text-muted-foreground text-sm mt-3 font-body">
-            Start slicing your trades.
-          </p>
+          <p className="text-muted-foreground text-sm mt-3 font-body">Start slicing your trades.</p>
         </div>
       ) : success ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
@@ -113,7 +110,10 @@ const TradeConfig: React.FC<TradeConfigProps> = ({
               </div>
               {txHash && (
                 <p className="text-xs text-muted-foreground">
-                  Tx: <span className="font-mono">{txHash.slice(0, 10)}…{txHash.slice(-8)}</span>
+                  Tx:{' '}
+                  <span className="font-mono">
+                    {txHash.slice(0, 10)}…{txHash.slice(-8)}
+                  </span>
                 </p>
               )}
             </div>
@@ -122,9 +122,12 @@ const TradeConfig: React.FC<TradeConfigProps> = ({
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
           <div className="text-center">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Start Slicing</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              Start Slicing
+            </h2>
             <p className="text-muted-foreground font-body mt-2 max-w-md mx-auto">
-              Configure your trade, choose your slices, and execute with Monad&apos;s parallel speed.
+              Configure your trade, choose your slices, and execute with Monad&apos;s parallel
+              speed.
             </p>
           </div>
 

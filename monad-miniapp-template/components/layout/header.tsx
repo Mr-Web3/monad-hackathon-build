@@ -116,14 +116,14 @@ function CheeseShelfSVG() {
 /* Thick SVG cheese drips hanging from the bottom of the shelf */
 function CheeseShelfDrips() {
   const drips = [
-    { x: 80,  w: 12, h: 45, delay: '0s',   dur: '5.5s' },
-    { x: 190, w: 8,  h: 30, delay: '1.2s', dur: '6.2s' },
+    { x: 80, w: 12, h: 45, delay: '0s', dur: '5.5s' },
+    { x: 190, w: 8, h: 30, delay: '1.2s', dur: '6.2s' },
     { x: 340, w: 14, h: 55, delay: '0.5s', dur: '5.0s' },
     { x: 520, w: 10, h: 38, delay: '2.0s', dur: '6.8s' },
     { x: 680, w: 13, h: 50, delay: '0.8s', dur: '5.3s' },
-    { x: 850, w: 9,  h: 32, delay: '1.8s', dur: '6.5s' },
+    { x: 850, w: 9, h: 32, delay: '1.8s', dur: '6.5s' },
     { x: 1020, w: 11, h: 42, delay: '0.3s', dur: '5.8s' },
-    { x: 1140, w: 8,  h: 28, delay: '2.5s', dur: '7.0s' },
+    { x: 1140, w: 8, h: 28, delay: '2.5s', dur: '7.0s' },
   ]
 
   return (

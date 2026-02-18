@@ -20,19 +20,15 @@ export function HomePage() {
   const infoRef = useRef<HTMLDivElement>(null)
   const tradeRef = useRef<HTMLDivElement>(null)
 
-  const {
-    createOrder,
-    isPending,
-    isConfirming,
-    orderIdFromReceipt,
-    txHash,
-    error,
-    reset,
-  } = useCreateOrder()
+  const { createOrder, isPending, isConfirming, orderIdFromReceipt, txHash, error, reset } =
+    useCreateOrder()
 
-  const handleCreateOrder = useCallback((totalAmount: number | bigint, numSlices: number) => {
-    createOrder(totalAmount, numSlices)
-  }, [createOrder])
+  const handleCreateOrder = useCallback(
+    (totalAmount: number | bigint, numSlices: number) => {
+      createOrder(totalAmount, numSlices)
+    },
+    [createOrder]
+  )
 
   const handleStartTrading = useCallback(() => {
     setShowTrade(true)
@@ -105,13 +101,15 @@ export function HomePage() {
             <div
               className="absolute top-[30%] left-0 w-40 h-80 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at left, hsl(24,90%,55%,0.06), transparent 70%)',
+                background:
+                  'radial-gradient(ellipse at left, hsl(24,90%,55%,0.06), transparent 70%)',
               }}
             />
             <div
               className="absolute top-[50%] right-0 w-40 h-80 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at right, hsl(8,78%,52%,0.05), transparent 70%)',
+                background:
+                  'radial-gradient(ellipse at right, hsl(8,78%,52%,0.05), transparent 70%)',
               }}
             />
 

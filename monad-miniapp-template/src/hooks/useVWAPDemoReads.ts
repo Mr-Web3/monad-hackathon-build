@@ -1,14 +1,9 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useState } from "react"
-import { useReadContract } from "wagmi"
-import { keccak256, encodePacked, padHex, type Hex } from "viem"
-import {
-  VWAP_DEMO_ADDRESS,
-  VWAP_DEMO_ABI,
-  toOrder,
-  type Order,
-} from "@/src/contracts/vwapDemo"
+import { useCallback, useEffect, useState } from 'react'
+import { useReadContract } from 'wagmi'
+import { keccak256, encodePacked, padHex, type Hex } from 'viem'
+import { VWAP_DEMO_ADDRESS, VWAP_DEMO_ABI, toOrder, type Order } from '@/src/contracts/vwapDemo'
 
 const MONAD_TESTNET_CHAIN_ID = 10143
 
@@ -17,10 +12,10 @@ const MONAD_TESTNET_CHAIN_ID = 10143
  * Left-pads with zeros if shorter; truncates to 32 bytes if longer.
  */
 export function parseOrderId(value: string | undefined | null): `0x${string}` | null {
-  if (value == null || value === "") return null
-  let hex = (value.startsWith("0x") ? value : `0x${value}`) as Hex
+  if (value == null || value === '') return null
+  let hex = (value.startsWith('0x') ? value : `0x${value}`) as Hex
   if (hex.length > 66) hex = `0x${hex.slice(2, 66)}` as Hex
-  if (hex.length < 66) hex = padHex(hex, { size: 32, dir: "left" })
+  if (hex.length < 66) hex = padHex(hex, { size: 32, dir: 'left' })
   return hex
 }
 
@@ -28,7 +23,7 @@ export function parseOrderId(value: string | undefined | null): `0x${string}` | 
  * Compute sliceId = keccak256(encodePacked(orderId, sliceIndex)) for sliceSizes lookup.
  */
 export function getSliceId(orderId: `0x${string}`, sliceIndex: number): `0x${string}` {
-  return keccak256(encodePacked(["bytes32", "uint8"], [orderId, sliceIndex]))
+  return keccak256(encodePacked(['bytes32', 'uint8'], [orderId, sliceIndex]))
 }
 
 /**
@@ -46,7 +41,7 @@ export function useOrder(orderId: string | `0x${string}` | undefined | null): {
   const { data, isLoading, isError, error, refetch } = useReadContract({
     address: VWAP_DEMO_ADDRESS as `0x${string}`,
     abi: VWAP_DEMO_ABI,
-    functionName: "getOrder",
+    functionName: 'getOrder',
     args: parsed ? [parsed] : undefined,
     chainId: MONAD_TESTNET_CHAIN_ID,
     query: {
@@ -55,7 +50,9 @@ export function useOrder(orderId: string | `0x${string}` | undefined | null): {
     },
   })
 
-  const raw = data as readonly [string, bigint, number | bigint, number | bigint, bigint, boolean] | undefined
+  const raw = data as
+    | readonly [string, bigint, number | bigint, number | bigint, bigint, boolean]
+    | undefined
   const order = raw != null ? toOrder(raw) : undefined
 
   return {
@@ -96,7 +93,7 @@ export function useRecentOrders(): {
     setError(null)
     setIsLoading(true)
     try {
-      const { getPublicClient } = await import("@/lib/publicClient")
+      const { getPublicClient } = await import('@/lib/publicClient')
       const client = getPublicClient()
       const blockNumber = await client.getBlockNumber()
       const fromBlock = blockNumber - BigInt(RECENT_ORDERS_BLOCK_RANGE)
@@ -105,7 +102,7 @@ export function useRecentOrders(): {
       const logs = await client.getContractEvents({
         address: VWAP_DEMO_ADDRESS as `0x${string}`,
         abi: VWAP_DEMO_ABI,
-        eventName: "OrderCreated",
+        eventName: 'OrderCreated',
         fromBlock: fromBlock < BigInt(0) ? BigInt(0) : fromBlock,
         toBlock,
       })
@@ -115,7 +112,7 @@ export function useRecentOrders(): {
         .filter((args): args is OrderCreatedArgs & { orderId: `0x${string}` } => !!args?.orderId)
         .map((args) => ({
           orderId: args.orderId,
-          creator: args.creator ?? "",
+          creator: args.creator ?? '',
           amount: args.amount ?? BigInt(0),
         }))
       setOrders(rows.slice(-RECENT_ORDERS_LIMIT).reverse())
@@ -151,11 +148,8 @@ export function useSliceExecuted(
   const { data, isLoading, isError, error, refetch } = useReadContract({
     address: VWAP_DEMO_ADDRESS as `0x${string}`,
     abi: VWAP_DEMO_ABI,
-    functionName: "isSliceExecuted",
-    args:
-      parsed != null && sliceIndex !== undefined
-        ? [parsed, sliceIndex]
-        : undefined,
+    functionName: 'isSliceExecuted',
+    args: parsed != null && sliceIndex !== undefined ? [parsed, sliceIndex] : undefined,
     chainId: MONAD_TESTNET_CHAIN_ID,
     query: {
       enabled: parsed != null && sliceIndex !== undefined,
@@ -175,9 +169,7 @@ export function useSliceExecuted(
  * Read the executed-slices bitmask for an order (bit i = 1 means slice i executed).
  * Use to compute first unexecuted slice without N separate hooks.
  */
-export function useExecutedMask(
-  orderId: string | `0x${string}` | undefined | null
-): {
+export function useExecutedMask(orderId: string | `0x${string}` | undefined | null): {
   mask: bigint | undefined
   isLoading: boolean
   isError: boolean
@@ -189,7 +181,7 @@ export function useExecutedMask(
   const { data, isLoading, isError, error, refetch } = useReadContract({
     address: VWAP_DEMO_ADDRESS as `0x${string}`,
     abi: VWAP_DEMO_ABI,
-    functionName: "getExecutedMask",
+    functionName: 'getExecutedMask',
     args: parsed ? [parsed] : undefined,
     chainId: MONAD_TESTNET_CHAIN_ID,
     query: {
@@ -242,7 +234,7 @@ export function useSliceSize(
   const { data, isLoading, isError, error, refetch } = useReadContract({
     address: VWAP_DEMO_ADDRESS as `0x${string}`,
     abi: VWAP_DEMO_ABI,
-    functionName: "sliceSizes",
+    functionName: 'sliceSizes',
     args: sliceId != null ? [sliceId] : undefined,
     chainId: MONAD_TESTNET_CHAIN_ID,
     query: {

@@ -4,6 +4,7 @@ export type GenericContractsDeclaration = {
     [contractName: string]: {
       address: string
       abi: any[]
+      inheritedFunctions?: Record<string, unknown>
     }
   }
 }

@@ -43,24 +43,20 @@ function SliceCell({
   return (
     <div
       className={`rounded-lg border border-border p-3 text-center ${
-        executed
-          ? 'bg-primary/10 border-primary/30'
-          : 'bg-card'
+        executed ? 'bg-primary/10 border-primary/30' : 'bg-card'
       }`}
     >
-      <div className="text-xs font-medium text-muted-foreground">
-        Slice {index + 1}
-      </div>
+      <div className="text-xs font-medium text-muted-foreground">Slice {index + 1}</div>
       <div className="mt-0.5 font-mono text-sm text-foreground">
         {loadingAmount ? '…' : amount != null ? String(amount) : '—'}
         {!loadingAmount && amount !== undefined && amount === BigInt(0) && (
-          <span className="ml-1 text-xs text-amber-500" title="sliceId may not match contract">(sliceId calc mismatch?)</span>
+          <span className="ml-1 text-xs text-amber-500" title="sliceId may not match contract">
+            (sliceId calc mismatch?)
+          </span>
         )}
       </div>
       {executed ? (
-        <span className="mt-2 inline-block text-xs font-medium text-primary">
-          Done
-        </span>
+        <span className="mt-2 inline-block text-xs font-medium text-primary">Done</span>
       ) : (
         <button
           type="button"
@@ -79,8 +75,21 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
   const [executingIndex, setExecutingIndex] = useState<number | null>(null)
   const [executeAllRemaining, setExecuteAllRemaining] = useState(false)
 
-  const { order, isLoading: orderLoading, isError: orderError, refetch: refetchOrder } = useOrder(orderId)
-  const { executeSlice, isPending: writePending, isConfirming: writeConfirming, isSuccess: writeSuccess, error: writeError, reset: resetWrite, txHash: lastTxHash } = useExecuteSlice()
+  const {
+    order,
+    isLoading: orderLoading,
+    isError: orderError,
+    refetch: refetchOrder,
+  } = useOrder(orderId)
+  const {
+    executeSlice,
+    isPending: writePending,
+    isConfirming: writeConfirming,
+    isSuccess: writeSuccess,
+    error: writeError,
+    reset: resetWrite,
+    txHash: lastTxHash,
+  } = useExecuteSlice()
 
   const numSlices = order != null ? safeSliceCount(order.numSlices) : 0
   const { firstUnexecutedIndex, refetch: refetchMask } = useExecutedMask(orderId)
@@ -129,9 +138,7 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
           <h1 className="text-2xl font-bold text-foreground sm:text-3xl font-display">
             Order detail
           </h1>
-          <p className="break-all font-mono text-sm text-muted-foreground">
-            {orderId}
-          </p>
+          <p className="break-all font-mono text-sm text-muted-foreground">{orderId}</p>
 
           <NetworkHelpers latestTxHash={lastTxHash} className="mb-4" />
 
@@ -153,49 +160,35 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
             <>
               <div className="grid gap-4 rounded-xl border border-border bg-card p-4 sm:grid-cols-2">
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Creator
-                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">Creator</span>
                   <p className="break-all font-mono text-sm text-card-foreground">
                     {order.creator}
                   </p>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Total amount
-                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">Total amount</span>
                   <p className="font-mono text-sm text-card-foreground">
                     {String(order.totalAmount)}
                   </p>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Slices
-                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">Slices</span>
                   <p className="font-mono text-sm text-card-foreground">
                     {safeSliceCount(order.numSlices)}
                   </p>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Executed
-                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">Executed</span>
                   <p className="font-mono text-sm text-card-foreground">
                     {safeSliceCount(order.executedSlices)} / {safeSliceCount(order.numSlices)}
                   </p>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Active
-                  </span>
-                  <p className="text-sm text-card-foreground">
-                    {order.active ? 'Yes' : 'No'}
-                  </p>
+                  <span className="text-xs font-medium text-muted-foreground">Active</span>
+                  <p className="text-sm text-card-foreground">{order.active ? 'Yes' : 'No'}</p>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Start time
-                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">Start time</span>
                   <p className="font-mono text-sm text-card-foreground">
                     {order.startTime != null ? String(order.startTime) : '—'}
                   </p>
@@ -221,34 +214,41 @@ export function OrderDetailPage({ orderId }: OrderDetailPageProps) {
                 ))}
               </div>
 
-              {order.active && (() => {
-            const next = firstUnexecutedIndex(numSlices)
-            const busy = writePending || writeConfirming || executingIndex !== null
-                return (
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => { if (next != null) handleExecute(next) }}
-                      disabled={busy || next == null}
-                      className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/50 disabled:opacity-50 transition-colors"
-                    >
-                      {next == null ? 'All slices executed' : busy ? 'Executing…' : `Execute next (slice ${next + 1})`}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (next == null) return
-                        setExecuteAllRemaining(true)
-                        handleExecute(next)
-                      }}
-                      disabled={busy || next == null}
-                      className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/50 disabled:opacity-50 transition-colors"
-                    >
-                      Execute all remaining
-                    </button>
-                  </div>
-                )
-              })()}
+              {order.active &&
+                (() => {
+                  const next = firstUnexecutedIndex(numSlices)
+                  const busy = writePending || writeConfirming || executingIndex !== null
+                  return (
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (next != null) handleExecute(next)
+                        }}
+                        disabled={busy || next == null}
+                        className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/50 disabled:opacity-50 transition-colors"
+                      >
+                        {next == null
+                          ? 'All slices executed'
+                          : busy
+                            ? 'Executing…'
+                            : `Execute next (slice ${next + 1})`}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (next == null) return
+                          setExecuteAllRemaining(true)
+                          handleExecute(next)
+                        }}
+                        disabled={busy || next == null}
+                        className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/50 disabled:opacity-50 transition-colors"
+                      >
+                        Execute all remaining
+                      </button>
+                    </div>
+                  )
+                })()}
             </>
           ) : null}
 

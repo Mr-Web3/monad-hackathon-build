@@ -54,7 +54,7 @@ const ExecutionDashboard: React.FC<ExecutionDashboardProps> = ({
       setExecutedSlices(newExecuted)
       addLog(
         `Slice ${next + 1} filled at $${(0.98 + Math.random() * 0.03).toFixed(4)}`,
-        'sequential',
+        'sequential'
       )
       setIsExecuting(false)
 
@@ -80,10 +80,7 @@ const ExecutionDashboard: React.FC<ExecutionDashboardProps> = ({
     setTimeout(() => {
       const newExecuted = [...executedSlices, ...available]
       setExecutedSlices(newExecuted)
-      addLog(
-        `${available.length} slices delivered fresh in the same block`,
-        'parallel',
-      )
+      addLog(`${available.length} slices delivered fresh in the same block`, 'parallel')
       setIsExecuting(false)
       setOvenGlow(false)
 
@@ -109,7 +106,12 @@ const ExecutionDashboard: React.FC<ExecutionDashboardProps> = ({
           className={`bg-card border border-border rounded-2xl p-6 flex flex-col items-center transition-shadow duration-500 ${ovenGlow ? 'oven-glow-intense' : ''}`}
         >
           <div className="relative">
-            <PizzaSVG sliceCount={sliceCount} progress={0.4} executedSlices={executedSlices} size={250} />
+            <PizzaSVG
+              sliceCount={sliceCount}
+              progress={0.4}
+              executedSlices={executedSlices}
+              size={250}
+            />
             {ovenGlow && (
               <div className="absolute inset-0 bg-pizza-ember/10 rounded-full heat-shimmer" />
             )}

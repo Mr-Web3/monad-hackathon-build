@@ -59,7 +59,7 @@ const CheeseDrips: React.FC<CheeseDripsProps> = ({
         h: Math.round(d.h * scale),
         glistenDelay: `${i * 0.9}s`,
       })),
-    [scale],
+    [scale]
   )
 
   return (

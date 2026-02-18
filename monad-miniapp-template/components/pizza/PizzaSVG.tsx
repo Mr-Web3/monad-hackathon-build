@@ -138,9 +138,7 @@ const PizzaSVG: React.FC<PizzaSVGProps> = ({
       {cheeseStretch}
       {slices}
 
-      {progress < 0.1 && (
-        <circle cx={center} cy={center} r={size * 0.02} fill="hsl(8 78% 45%)" />
-      )}
+      {progress < 0.1 && <circle cx={center} cy={center} r={size * 0.02} fill="hsl(8 78% 45%)" />}
     </svg>
   )
 }

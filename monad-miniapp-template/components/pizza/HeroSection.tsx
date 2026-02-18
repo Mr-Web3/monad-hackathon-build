@@ -64,7 +64,7 @@ const HeroSection: React.FC = () => {
         const m = midRad(i)
         return { path: arcPath(i), dx: Math.cos(m), dy: Math.sin(m), mid: m }
       }),
-    [],
+    []
   )
 
   /* ── Motion values for wrapper elements (compressed timeline) ── */
@@ -154,7 +154,10 @@ const HeroSection: React.FC = () => {
         </div>
 
         {/* Pizza — offset down to avoid text overlap */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ paddingTop: '8vh' }}>
+        <div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{ paddingTop: '8vh' }}
+        >
           <motion.div
             style={{ scale: pzScale, opacity: pzOp, rotate: pzRot }}
             className="will-change-transform"
@@ -217,12 +220,7 @@ const HeroSection: React.FC = () => {
                     <circle cx={tX1} cy={tY1} r="7" fill="hsl(8,78%,35%)" />
                     <circle cx={tX2} cy={tY2} r="5.5" fill="hsl(8,78%,38%)" />
                     {/* Basil */}
-                    <circle
-                      cx={tX1 + 10}
-                      cy={tY1 - 5}
-                      r="3.5"
-                      fill="hsl(142,50%,40%)"
-                    />
+                    <circle cx={tX1 + 10} cy={tY1 - 5} r="3.5" fill="hsl(142,50%,40%)" />
                   </g>
                 )
               })}
